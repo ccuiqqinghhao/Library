@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Service
@@ -43,20 +44,7 @@ public class SysService {
         return ResultUtil.success();
     }
 
-    /**
-     * 查询所有用户
-     * @return
-     */
-    public ResultEntity selectAllUser(){
-        logger.info("开始查询所有用户");
-        return ResultUtil.success(sysMapper.selectAllUser());
-    }
-    public ResultEntity deleteUser(User user)throws Exception{
-        logger.info("开始删除用户");
-        if(sysMapper.deleteUser(user)==1)
-            return ResultUtil.success();
-        throw new RuntimeException("删除用户失败");
-    }
+
     /**
      * 根据Bname查询图书
      * @param book
@@ -123,13 +111,38 @@ public class SysService {
 
 
     /**
+     * 查询所有用户
+     * @return
+     */
+    public ResultEntity selectAllUser(){
+        logger.info("开始查询所有用户");
+        return ResultUtil.success(sysMapper.selectAllUser());
+    }
+
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public ResultEntity deleteUser(User user)throws Exception{
+        logger.info("开始删除用户");
+        if(sysMapper.deleteUser(user)==1)
+            return ResultUtil.success();
+        throw new RuntimeException("删除用户失败");
+    }
+    /**
      * 根据Uno查询User
      * @param user
      * @return
      */
     public ResultEntity selectUserByUno(User user){
         logger.info("开始根据Uno查询User");
-        return ResultUtil.success(sysMapper.selectUserByUno(user));
+        List<User> l=null;
+        if((l=sysMapper.selectUserByUno(user)).isEmpty())
+            throw new RuntimeException("找不到该用户");
+        else
+            return ResultUtil.success(l);
     }
     /**
      * 更新用户
@@ -169,9 +182,9 @@ public class SysService {
     @Transactional
     public ResultEntity borrowBook(User user,Book book){
         logger.info(user.toString()+"  "+book.toString());
-        if((user=sysMapper.selectUserByUno(user))==null)
+        if(sysMapper.selectUserByUno(user).size()==0)
             throw new RuntimeException("找不到该用户");
-        if((book=sysMapper.selectBookByClassifyNo(book))==null)
+        if(sysMapper.selectBookByClassifyNo(book)==null)
             throw new RuntimeException("找不到图书信息");
         if(sysMapper.selectIsBorrowedThisBook(user.getUno(),book.getClassifyNo())==1)
             throw new RuntimeException("同样的书只可以借一本哦");

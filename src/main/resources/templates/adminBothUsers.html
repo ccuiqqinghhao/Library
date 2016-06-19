@@ -27,37 +27,30 @@
 
 
 
-<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+<div id="usersInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
     <div>
-        <input type="text" class="form-control" placeholder="请输入书名" v-model="input">
+        <input type="text" class="form-control" placeholder="请输入读者ID" v-model="input">
         <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
     </div>
     <table class="table table-hover table-condensed">
         <tr>
-            <th>图书编号</th>
-            <th>书名</th>
-            <th>作者</th>
-            <th>出版社</th>
-            <th>出版日期</th>
-            <th>价格</th>
-            <th>类别</th>
-            <th>总数量</th>
-            <th>借出数量</th>
+            <th>读者ID</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>生日</th>
+            <th>联系电话</th>
+            <th>职称</th>
+
         </tr>
         <tr v-for="product in products">
-            <td>{{product.classifyNo}}</td>
-            <td>{{product.bname}}</td>
-            <td>{{product.bwriter}}</td>
-            <td>{{product.bpubAdr}}</td>
-            <td>{{product.bpubDate}}</td>
-            <td>{{product.bprice}}</td>
-            <td>{{product.btype}}</td>
-            <td>{{product.btotalNum}}</td>
-            <td>{{product.bborrowedNum}}</td>
+            <td>{{product.uno}}</td>
+            <td>{{product.uname}}</td>
+            <td>{{product.usex}}</td>
+            <td>{{product.ubirth}}</td>
+            <td>{{product.uphone}}</td>
+            <td>{{product.uposition}}</td>
         </tr>
-
     </table>
-
 </div>
 </body>
 
@@ -68,25 +61,28 @@
 
 
     new Vue({
-        el:'#bookInfo',
+        el:'#usersInfo',
         data:{
             input:'',
             products:'',
         },
         methods:{
             checkInput:function(){
-                if(this.input!='')
-                    this.select();
+
+                if(this.input=='')
+                    this.select("sys/BothUsers");
+                else
+                    this.select("sys/selectUser/"+this.input);
             },
-            select:function(){
+            select:function(url){
                 var vm=this;
-                var url="sys/SelectBookByBname/"+vm.input;
                 axios.get(url).then(function(response){
                     if(response.data.msg!="success"){
                         vm.error=response.data.msg;
                         return;
                     }
                     vm.products=response.data.data;
+                    console.log(response);
                 }).catch(function(error){
                     console.log(error);
                 });

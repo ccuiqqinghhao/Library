@@ -28,4 +28,8 @@ public class PageController {
         return "adminBothBooks";
     }
 
+    @RequestMapping("/adminBothUsers")
+    public String adminBothUsers(){
+        return "adminBothUsers";
+    }
 }

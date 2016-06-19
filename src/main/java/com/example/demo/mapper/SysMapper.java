@@ -32,7 +32,7 @@ public interface SysMapper {
      * @return
      */
     @Select("select Uno,Uname,Usex,Ubirth,Uphone,UPosition from User where Uno =#{uno}")
-    User selectUserByUno(User user);
+    List<User> selectUserByUno(User user);
 
     /**
      * 更新用户信息
@@ -74,7 +74,7 @@ public interface SysMapper {
      * @return
      */
     @Select("select * from book where ClassifyNo=#{classifyNo}")
-    Book selectBookByClassifyNo(Book book);
+    List<Book> selectBookByClassifyNo(Book book);
 
     /**
      * 更新图书信息
