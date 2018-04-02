@@ -13,7 +13,7 @@ public class ResultUtil {
         ResultEntity result=new ResultEntity();
         result.setCode(0);
         result.setData(object);
-        result.setMsg("成功");
+        result.setMsg("success");
         return result;
     }
     public static ResultEntity success(){

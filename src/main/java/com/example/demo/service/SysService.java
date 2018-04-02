@@ -73,8 +73,21 @@ public class SysService {
      */
     public ResultEntity updateBook(Book book){
         logger.info("开始更新图书信息");
-        sysMapper.updateBook(book);
-        return ResultUtil.success();
+        if(sysMapper.updateBook(book)==1)
+            return ResultUtil.success();
+        return ResultUtil.error(100,"修改失败");
+    }
+
+    /**
+     * 删除图书
+     * @param book
+     * @return
+     */
+    public ResultEntity deleteBook(Book book){
+        logger.info("开始删除图书");
+        if(sysMapper.deleteBook(book)==1)
+            return ResultUtil.success();
+        return  ResultUtil.error(100,"删除失败");
     }
 
 
@@ -95,7 +108,20 @@ public class SysService {
      */
     public ResultEntity updateUser(User user){
         logger.info("开始更新User");
-        sysMapper.updateUser(user);
-        return ResultUtil.success();
+        if(sysMapper.updateUser(user)==1)
+            return ResultUtil.success();
+        return ResultUtil.error(100,"修改失败");
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    public ResultEntity insertUser(User user){
+        logger.info("开始添加用户");
+        if(sysMapper.insertUser(user)==1)
+            return ResultUtil.success();
+        return ResultUtil.error(100,"用户添加失败");
     }
 }

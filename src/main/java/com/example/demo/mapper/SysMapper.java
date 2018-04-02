@@ -2,6 +2,8 @@ package com.example.demo.mapper;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Sys;
 import com.example.demo.entity.User;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -40,9 +42,15 @@ public interface SysMapper {
      * @return
      */
     @Update("update user set Uname =#{uname},Usex=#{usex},Ubirth=#{ubirth},Uphone=#{uphone},UPosition=#{uposition} where Uno=#{uno}")
-    Boolean updateUser(User user);
+    Integer updateUser(User user);
 
-
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @Insert("insert into user(Uno,Uname,Usex,Ubirth,Uphone,UPosition)values(#{uno},#{uname}.#{usex},#{ubirth},#{uphone},#{uposition})")
+    Integer insertUser(User user);
 
 
 
@@ -69,9 +77,14 @@ public interface SysMapper {
      * @return
      */
     @Update("update book set Bname=#{bname},Bwriter=#{bwriter},BpubAdr=#{bpubAdr},BpubDate=#{bpubDate},Bprice=#{bprice},Btype=#{btype} where ClassifyNo=#{classifyNo}")
-    Boolean updateBook(Book book);
+    Integer updateBook(Book book);
 
-
+    /**
+     * 删除图书
+     * @param book
+     */
+    @Delete("delete from book where ClassifyNo=#{classifyNo}")
+    Integer deleteBook(Book book);
 
 
 

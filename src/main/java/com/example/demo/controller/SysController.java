@@ -64,6 +64,15 @@ public class SysController {
 
     }
 
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @PostMapping(value="/insertUser")
+    public ResultEntity insertUser(@Valid User user){
+        return sysService.insertUser(user);
+    }
 
 
 
@@ -122,5 +131,16 @@ public class SysController {
         return sysService.updateBook(book);
     }
 
+    /**
+     * 删除图书
+     * @param classifyNo
+     * @return
+     */
+    @PostMapping(value="/deleteBook/{ClassifyNO}")
+    public ResultEntity deleteBook(@PathVariable("ClassifyNo") String classifyNo){
+        Book book=new Book();
+        book.setClassifyNo(classifyNo);
+        return sysService.deleteBook(book);
+    }
 
 }
