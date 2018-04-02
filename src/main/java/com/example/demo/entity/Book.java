@@ -5,9 +5,19 @@ public class Book {
     private String bname;
     private String bwriter;
     private String bpubAdr;
+    private String bpubDate;
     private Integer bprice;
     private String btype;
     private Integer btotalNum;
+
+    public String getBpubDate() {
+        return bpubDate;
+    }
+
+    public void setBpubDate(String bpubDate) {
+        this.bpubDate = bpubDate;
+    }
+
     private Integer bborrowedNum;
 
     public String getClassifyNo() {

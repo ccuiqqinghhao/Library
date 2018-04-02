@@ -23,7 +23,7 @@ public class LoginAndRegisterController {
        Sys sys=new Sys();
        sys.setSno(sno);
        sys.setSpwd(spwd);
-       return sysService.sysLogin(sys,httpSession);
+       return sysService.login(sys,httpSession);
 
     }
     //todo可能会写一个用户登录

@@ -5,6 +5,7 @@ import com.example.demo.entity.Book;
 import com.example.demo.entity.ResultEntity;
 import com.example.demo.entity.Sys;
 
+import com.example.demo.entity.User;
 import com.example.demo.mapper.SysMapper;
 import com.example.demo.util.Const;
 import com.example.demo.util.ResultUtil;
@@ -28,10 +29,10 @@ public class SysService {
      * @param httpSession
      * @return
      */
-    public ResultEntity sysLogin(Sys sys, HttpSession httpSession){
+    public ResultEntity login(Sys sys, HttpSession httpSession){
 
         logger.info("进入管理员登录服务");
-        sys=sysMapper.sysLogin(sys);
+        sys=sysMapper.login(sys);
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
         return ResultUtil.success();
     }
@@ -40,13 +41,61 @@ public class SysService {
      * 查询所有用户
      * @return
      */
-    public ResultEntity sysSelectAllUser(){
+    public ResultEntity selectAllUser(){
         logger.info("开始查询所有用户");
-        return ResultUtil.success(sysMapper.sysSelectAllUser());
+        return ResultUtil.success(sysMapper.selectAllUser());
     }
 
-    public ResultEntity sysSelectBookByBname(Book book){
+    /**
+     * 根据Bname查询图书
+     * @param book
+     * @return
+     */
+    public ResultEntity selectBookByBname(Book book){
         logger.info("开始根据Bname查询图书");
-        return ResultUtil.success(sysMapper.sysSelectBookByBname(book));
+        return ResultUtil.success(sysMapper.selectBookByBname(book));
+    }
+
+    /**
+     * 根据ClassifyNo查询图书
+     * @param book
+     * @return
+     */
+    public ResultEntity selectBookByClassifyNo(Book book){
+        logger.info("开始根据ClassifyNo查询图书");
+        return ResultUtil.success(sysMapper.selectBookByClassifyNo(book));
+    }
+
+    /**
+     * 更新图书信息
+     * @param book
+     * @return
+     */
+    public ResultEntity updateBook(Book book){
+        logger.info("开始更新图书信息");
+        sysMapper.updateBook(book);
+        return ResultUtil.success();
+    }
+
+
+
+    /**
+     * 根据Uno查询User
+     * @param user
+     * @return
+     */
+    public ResultEntity selectUserByUno(User user){
+        logger.info("开始根据Uno查询User");
+        return ResultUtil.success(sysMapper.selectUserByUno(user));
+    }
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
+    public ResultEntity updateUser(User user){
+        logger.info("开始更新User");
+        sysMapper.updateUser(user);
+        return ResultUtil.success();
     }
 }
