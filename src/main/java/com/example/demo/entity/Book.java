@@ -10,6 +10,21 @@ public class Book {
     private String btype;
     private Integer btotalNum;
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "classifyNo='" + classifyNo + '\'' +
+                ", bname='" + bname + '\'' +
+                ", bwriter='" + bwriter + '\'' +
+                ", bpubAdr='" + bpubAdr + '\'' +
+                ", bpubDate='" + bpubDate + '\'' +
+                ", bprice=" + bprice +
+                ", btype='" + btype + '\'' +
+                ", btotalNum=" + btotalNum +
+                ", bborrowedNum=" + bborrowedNum +
+                '}';
+    }
+
     public String getBpubDate() {
         return bpubDate;
     }

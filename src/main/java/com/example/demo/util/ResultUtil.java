@@ -1,6 +1,8 @@
 package com.example.demo.util;
 
 import com.example.demo.entity.ResultEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 public class ResultUtil {
@@ -26,6 +28,7 @@ public class ResultUtil {
      * @param msg
      * @return
      */
+
     public static ResultEntity error(Integer code,String msg){
         ResultEntity result=new ResultEntity();
         result.setCode(code);

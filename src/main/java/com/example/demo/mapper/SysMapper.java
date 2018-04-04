@@ -2,11 +2,10 @@ package com.example.demo.mapper;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Sys;
 import com.example.demo.entity.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -49,9 +48,16 @@ public interface SysMapper {
      * @param user
      * @return
      */
-    @Insert("insert into user(Uno,Uname,Usex,Ubirth,Uphone,UPosition)values(#{uno},#{uname}.#{usex},#{ubirth},#{uphone},#{uposition})")
+    @Insert("insert into user(Uno,Upwd,Uname,Usex,Ubirth,Uphone,UPosition)values(#{uno},#{uno},#{uname},#{usex},#{ubirth},#{uphone},#{uposition})")
     Integer insertUser(User user);
 
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     */
+    @Delete("delete from user where Uno=#{uno}")
+    Integer deleteUser(User user);
 
 
     /**
@@ -87,8 +93,47 @@ public interface SysMapper {
     Integer deleteBook(Book book);
 
 
+    /**
+     * 添加图书
+     * @param book
+     * @return
+     */
+    @Insert("insert into book (ClassifyNo,Bname,Bwriter,BpubAdr,BpubDate,Bprice,Btype,BtotalNum)values(#{classifyNo},#{bname},#{bwriter},#{bpubAdr},#{bpubDate},#{bprice},#{btype},#{btotalNum})")
+    Integer insertBook(Book book);
+
+    /**
+     * 如果图书编号已经存在,变更总数量
+     * @param book
+     * @return
+     */
+    @Update("update book set BtotalNum=BtotalNum+1 where ClassifyNo=#{classifyNo}")
+    Integer updateBookTotalNum(Book book);
 
 
+    /**图书借阅部分开始**/
+    /**
+     * 添加到借阅信息表
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Insert("insert into userbook (Uno,ClassifyNo,UBorrowDate)values(#{uno},#{classifyNo},sysDate())")
+    Integer borrowBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
 
+    /**
+     * 更新图书已借出数量
+     * @param book
+     * @return
+     */
+    @Update("update book set BborrowedNum=BborrowedNum+1 where ClassifyNo=#{classifyNo}")
+    Integer updateBookBorrowedNum(Book book);
+
+    @Insert("insert ")
+    /**图书借阅部分结束**/
+
+
+    /**图书归还部分开始*/
+
+    /**图书归还部分结束*/
 
 }

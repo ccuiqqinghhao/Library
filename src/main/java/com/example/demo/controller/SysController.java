@@ -73,7 +73,12 @@ public class SysController {
     public ResultEntity insertUser(@Valid User user){
         return sysService.insertUser(user);
     }
-
+    @PostMapping(value="/deleteUser/{uno}")
+    public ResultEntity deleteUser(@PathVariable("uno") String uno) throws Exception{
+        User user =new User();
+        user.setUno(uno);
+        return sysService.deleteUser(user);
+    }
 
 
 
@@ -141,6 +146,32 @@ public class SysController {
         Book book=new Book();
         book.setClassifyNo(classifyNo);
         return sysService.deleteBook(book);
+    }
+
+    /**
+     * 添加图书
+     * @param book
+     * @return
+     */
+    @PostMapping(value="/insertBook")
+    public ResultEntity insertBook(@Valid Book book){
+        return sysService.insertBook(book);
+    }
+
+    /**
+     * 借阅图书
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @PostMapping(value="/borrowBook")
+    public ResultEntity borrowBook(@RequestParam("Uno")String uno,
+                                   @RequestParam("ClassifyNo")String classifyNo){
+        User user=new User();
+        user.setUno(uno);
+        Book book=new Book();
+        book.setClassifyNo(classifyNo);
+        return sysService.borrowBook(user,book);
     }
 
 }

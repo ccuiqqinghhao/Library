@@ -9,6 +9,19 @@ public class User {
     private String uphone;
     private String uposition;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "uno='" + uno + '\'' +
+                ", upwd='" + upwd + '\'' +
+                ", uname='" + uname + '\'' +
+                ", usex='" + usex + '\'' +
+                ", ubirth='" + ubirth + '\'' +
+                ", uphone='" + uphone + '\'' +
+                ", uposition='" + uposition + '\'' +
+                '}';
+    }
+
     public String getUno() {
         return uno;
     }

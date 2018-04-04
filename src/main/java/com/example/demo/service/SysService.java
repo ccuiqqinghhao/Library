@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,7 +31,7 @@ public class SysService {
      * @return
      */
     public ResultEntity login(Sys sys, HttpSession httpSession){
-
+    //todo登录
         logger.info("进入管理员登录服务");
         sys=sysMapper.login(sys);
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
@@ -45,7 +46,12 @@ public class SysService {
         logger.info("开始查询所有用户");
         return ResultUtil.success(sysMapper.selectAllUser());
     }
-
+    public ResultEntity deleteUser(User user)throws Exception{
+        logger.info("开始删除用户");
+        if(sysMapper.deleteUser(user)==1)
+            return ResultUtil.success();
+        throw new RuntimeException("删除用户失败");
+    }
     /**
      * 根据Bname查询图书
      * @param book
@@ -75,7 +81,7 @@ public class SysService {
         logger.info("开始更新图书信息");
         if(sysMapper.updateBook(book)==1)
             return ResultUtil.success();
-        return ResultUtil.error(100,"修改失败");
+        throw new RuntimeException("更新图书信息失败");
     }
 
     /**
@@ -87,9 +93,28 @@ public class SysService {
         logger.info("开始删除图书");
         if(sysMapper.deleteBook(book)==1)
             return ResultUtil.success();
-        return  ResultUtil.error(100,"删除失败");
+        throw new RuntimeException("删除图书失败");
     }
 
+    /**
+     * 添加图书
+     * @param book
+     * @return
+     */
+    public ResultEntity insertBook(Book book){
+        if(sysMapper.selectBookByClassifyNo(book)==null){//不存在
+            if(sysMapper.insertBook(book)==1)//添加成功
+                return ResultUtil.success();
+            else
+                throw new RuntimeException("添加图书失败");
+        }else{
+            if(sysMapper.updateBookTotalNum(book)==1)
+                return ResultUtil.success();
+            else
+                throw new RuntimeException("图书数量更新失败");
+
+        }
+    }
 
 
     /**
@@ -108,9 +133,9 @@ public class SysService {
      */
     public ResultEntity updateUser(User user){
         logger.info("开始更新User");
-        if(sysMapper.updateUser(user)==1)
+        if(sysMapper.updateUser(user)>0)
             return ResultUtil.success();
-        return ResultUtil.error(100,"修改失败");
+        throw new RuntimeException("更新User信息失败");
     }
 
     /**
@@ -120,8 +145,37 @@ public class SysService {
      */
     public ResultEntity insertUser(User user){
         logger.info("开始添加用户");
-        if(sysMapper.insertUser(user)==1)
-            return ResultUtil.success();
-        return ResultUtil.error(100,"用户添加失败");
+        if(sysMapper.selectUserByUno(user)==null){
+            if(sysMapper.insertUser(user)==1)
+                return ResultUtil.success();
+            throw new RuntimeException("添加用户失败");
+        }else{
+            throw new RuntimeException("该用户id已存在");
+        }
+
+    }
+
+    /**
+     * 借阅图书
+     * @param user
+     * @param book
+     * @return
+     */
+    @Transactional
+    public ResultEntity borrowBook(User user,Book book){
+        logger.info(user.toString()+"  "+book.toString());
+        if(sysMapper.selectUserByUno(user)==null)
+            throw new RuntimeException("找不到该用户");
+        if((book=sysMapper.selectBookByClassifyNo(book))==null)
+            throw new RuntimeException("找不到图书信息");
+        if(book.getBborrowedNum()>=book.getBtotalNum())
+            throw new RuntimeException("图书在馆数量不足,无法借阅");
+        if(sysMapper.borrowBook(user.getUno(),book.getClassifyNo())==1)
+            if(sysMapper.updateBookBorrowedNum(book)==1)
+                if()
+                return ResultUtil.success();
+
+        throw new RuntimeException("借阅失败");
+
     }
 }
