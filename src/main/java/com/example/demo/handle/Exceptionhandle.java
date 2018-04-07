@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @ControllerAdvice
 public class Exceptionhandle {
-    //@ExceptionHandler(value=Exception.class)
+    @ExceptionHandler(value=Exception.class)
     @ResponseBody
     public ResultEntity handle(Exception e){
         return ResultUtil.error(100,e.getMessage());

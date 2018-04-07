@@ -4,8 +4,7 @@ import com.example.demo.entity.Sys;
 import com.example.demo.entity.User;
 import org.apache.ibatis.annotations.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 
 
@@ -135,7 +134,7 @@ public interface SysMapper {
      * @return
      */
     @Update("update book set BborrowedNum=BborrowedNum+1 where ClassifyNo=#{classifyNo}")
-    Integer updateBookBorrowedNum(Book book);
+    Integer updateBookBorrowedNumWhenBorrow(Book book);
 
     /**
      *更新rdeleted表格
@@ -165,7 +164,7 @@ public interface SysMapper {
      * @return
      */
     @Update("update book set BborrowedNum=BborrowedNum-1 where ClassifyNo=#{classifyNo}")
-    Integer updateBookBborrowedNum(Book book);
+    Integer updateBookBorrowedNumWhenReturn(Book book);
 
     /**
      * 删除userbook中的值

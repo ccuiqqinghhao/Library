@@ -173,7 +173,7 @@ public class SysService {
         if(book.getBborrowedNum()>=book.getBtotalNum())
             throw new RuntimeException("图书在馆数量不足,无法借阅");
         if(sysMapper.borrowBook(user.getUno(),book.getClassifyNo())==1)
-            if(sysMapper.updateBookBorrowedNum(book)==1&&
+            if(sysMapper.updateBookBorrowedNumWhenBorrow(book)==1&&
                     sysMapper.insertRdeleted(user.getUno(),book.getClassifyNo())==1)
                 return ResultUtil.success();
         throw new RuntimeException("借阅失败");
@@ -188,12 +188,12 @@ public class SysService {
     @Transactional
     public ResultEntity returnBook(User user,Book book){
         if(sysMapper.updateRdeletedReturnTime(user.getUno(),book.getClassifyNo())==1)
-            if(sysMapper.updateBookBorrowedNum(book)==1)
+            if(sysMapper.updateBookBorrowedNumWhenReturn(book)==1)
                 if(sysMapper.deleteUserBook(user.getUno(),book.getClassifyNo())==1)
                     return ResultUtil.success();
 
 
-        throw new RuntimeException("借阅失败");
+        throw new RuntimeException("还书失败");
 
     }
 }
