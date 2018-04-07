@@ -164,16 +164,34 @@ public class SysService {
     @Transactional
     public ResultEntity borrowBook(User user,Book book){
         logger.info(user.toString()+"  "+book.toString());
-        if(sysMapper.selectUserByUno(user)==null)
+        if((user=sysMapper.selectUserByUno(user))==null)
             throw new RuntimeException("找不到该用户");
         if((book=sysMapper.selectBookByClassifyNo(book))==null)
             throw new RuntimeException("找不到图书信息");
+        if(sysMapper.selectIsBorrowedThisBook(user.getUno(),book.getClassifyNo())==1)
+            throw new RuntimeException("同样的书只可以借一本哦");
         if(book.getBborrowedNum()>=book.getBtotalNum())
             throw new RuntimeException("图书在馆数量不足,无法借阅");
         if(sysMapper.borrowBook(user.getUno(),book.getClassifyNo())==1)
-            if(sysMapper.updateBookBorrowedNum(book)==1)
-                if()
+            if(sysMapper.updateBookBorrowedNum(book)==1&&
+                    sysMapper.insertRdeleted(user.getUno(),book.getClassifyNo())==1)
                 return ResultUtil.success();
+        throw new RuntimeException("借阅失败");
+    }
+
+    /**
+     * 还书操作
+     * @param user
+     * @param book
+     * @return
+     */
+    @Transactional
+    public ResultEntity returnBook(User user,Book book){
+        if(sysMapper.updateRdeletedReturnTime(user.getUno(),book.getClassifyNo())==1)
+            if(sysMapper.updateBookBorrowedNum(book)==1)
+                if(sysMapper.deleteUserBook(user.getUno(),book.getClassifyNo())==1)
+                    return ResultUtil.success();
+
 
         throw new RuntimeException("借阅失败");
 

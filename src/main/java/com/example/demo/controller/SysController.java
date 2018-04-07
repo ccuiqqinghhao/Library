@@ -174,4 +174,19 @@ public class SysController {
         return sysService.borrowBook(user,book);
     }
 
+    /**
+     * 图书归还
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @PostMapping(value="/returnBook")
+    public ResultEntity returnBook(@RequestParam("Uno")String uno,
+                                   @RequestParam("ClassifyNo")String classifyNo){
+        User user=new User();
+        user.setUno(uno);
+        Book book=new Book();
+        book.setClassifyNo(classifyNo);
+        return sysService.returnBook(user,book);
+    }
 }

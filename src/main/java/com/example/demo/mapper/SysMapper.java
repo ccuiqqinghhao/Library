@@ -111,13 +111,22 @@ public interface SysMapper {
 
 
     /**图书借阅部分开始**/
+
+    /**
+     * 检查是否借过此书
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Select("select count(*) from userbook where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer selectIsBorrowedThisBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
     /**
      * 添加到借阅信息表
      * @param uno
      * @param classifyNo
      * @return
      */
-    @Insert("insert into userbook (Uno,ClassifyNo,UBorrowDate)values(#{uno},#{classifyNo},sysDate())")
+    @Insert("insert into userbook (Uno,ClassifyNo,UBorrowDate,UExpectedReturnDate)values(#{uno},#{classifyNo},sysDate(),date_add(now(),interval 1 MONTH))")
     Integer borrowBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
 
     /**
@@ -128,11 +137,46 @@ public interface SysMapper {
     @Update("update book set BborrowedNum=BborrowedNum+1 where ClassifyNo=#{classifyNo}")
     Integer updateBookBorrowedNum(Book book);
 
-    @Insert("insert ")
+    /**
+     *更新rdeleted表格
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Insert("insert into rdeleted (Uno,ClassifyNo,UBorrowDate)values(#{uno},#{classifyNo},sysDate())")
+    Integer insertRdeleted(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+
     /**图书借阅部分结束**/
 
-
     /**图书归还部分开始*/
+
+    /**
+     * 更新rdeleted表中归还时间
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Update("update rdeleted set ReturnDate=sysDate() where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer updateRdeletedReturnTime(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+
+    /**
+     * 更新book表中借出数量
+     * @param book
+     * @return
+     */
+    @Update("update book set BborrowedNum=BborrowedNum-1 where ClassifyNo=#{classifyNo}")
+    Integer updateBookBborrowedNum(Book book);
+
+    /**
+     * 删除userbook中的值
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Delete("delete from userbook where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer deleteUserBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+
+
 
     /**图书归还部分结束*/
 
