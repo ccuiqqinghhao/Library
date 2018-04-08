@@ -207,12 +207,13 @@ public class SysService {
     @Transactional
     public ResultEntity redecorateBook(User user,Book book){
         logger.info(user.toString()+"  "+book.toString());
-        if(sysMapper.selectUReborrowTimesFromUserbook(user.getUno(),book.getClassifyNo())==1){
+        if(sysMapper.selectUReborrowTimesFromUserbook(user.getUno(),book.getClassifyNo())==1)
             throw new RuntimeException("已经续借过了");
-        }
-        if(sysMapper.updateUserBookUReborrowTimesAndUExpectedReturnDate(user.getUno(),book.getClassifyNo())==1&&
-            sysMapper.updateRdeletedUReborrowTimes(user.getUno(),book.getClassifyNo())==1)
-            return ResultUtil.success();
+        if(sysMapper.updateUserBookUReborrowTimesAndUExpectedReturnDate(user.getUno(),book.getClassifyNo())==1)
+            if (sysMapper.updateRdeletedUReborrowTimes(user.getUno(), book.getClassifyNo())==1)
+                return ResultUtil.success();
+
+
         throw new RuntimeException("续借失败");
     }
 }

@@ -176,7 +176,7 @@ public interface SysMapper {
      * @param classifyNo
      * @return
      */
-    @Update("update rdeleted set UReborrowTimes=UReborrowTimes+1 where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    @Update("update rdeleted set UReborrowTimes=UReborrowTimes+1 where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
     Integer updateRdeletedUReborrowTimes(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
     /**续借操作结束**/
 
