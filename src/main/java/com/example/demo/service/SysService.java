@@ -192,8 +192,27 @@ public class SysService {
                 if(sysMapper.deleteUserBook(user.getUno(),book.getClassifyNo())==1)
                     return ResultUtil.success();
 
-
         throw new RuntimeException("还书失败");
 
+    }
+
+
+
+    /**
+     * 续借操作
+     * @param user
+     * @param book
+     * @return
+     */
+    @Transactional
+    public ResultEntity redecorateBook(User user,Book book){
+        logger.info(user.toString()+"  "+book.toString());
+        if(sysMapper.selectUReborrowTimesFromUserbook(user.getUno(),book.getClassifyNo())==1){
+            throw new RuntimeException("已经续借过了");
+        }
+        if(sysMapper.updateUserBookUReborrowTimesAndUExpectedReturnDate(user.getUno(),book.getClassifyNo())==1&&
+            sysMapper.updateRdeletedUReborrowTimes(user.getUno(),book.getClassifyNo())==1)
+            return ResultUtil.success();
+        throw new RuntimeException("续借失败");
     }
 }

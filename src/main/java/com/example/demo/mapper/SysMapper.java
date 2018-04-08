@@ -147,6 +147,41 @@ public interface SysMapper {
 
     /**图书借阅部分结束**/
 
+
+
+
+
+    /**续借操作开始**/
+
+    /**
+     * 查询是否续借过
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Select("select UReborrowTimes from userbook where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer selectUReborrowTimesFromUserbook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+    /**
+     * 更新userbook表中UReborrowTimes和UExpectedReturnDate
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Update("update userbook set UReborrowTimes=UReborrowTimes+1,UExpectedReturnDate=date_add(UExpectedReturnDate,interval 1 MONTH) where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer updateUserBookUReborrowTimesAndUExpectedReturnDate(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+
+    /**
+     * 更新rdeleted表中UReborrowTimes
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @Update("update rdeleted set UReborrowTimes=UReborrowTimes+1 where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    Integer updateRdeletedUReborrowTimes(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
+    /**续借操作结束**/
+
+
+
     /**图书归还部分开始*/
 
     /**
@@ -174,9 +209,9 @@ public interface SysMapper {
      */
     @Delete("delete from userbook where Uno=#{uno} and ClassifyNo=#{classifyNo}")
     Integer deleteUserBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
-
-
-
     /**图书归还部分结束*/
+
+
+
 
 }

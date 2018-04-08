@@ -189,4 +189,20 @@ public class SysController {
         book.setClassifyNo(classifyNo);
         return sysService.returnBook(user,book);
     }
+
+    /**
+     * 续借操作
+     * @param uno
+     * @param classifyNo
+     * @return
+     */
+    @PostMapping(value="/redecorateBook")
+    public ResultEntity redecorateBook(@RequestParam("Uno")String uno,
+                                       @RequestParam("ClassifyNo")String classifyNo){
+        User user=new User();
+        Book book=new Book();
+        user.setUno(uno);
+        book.setClassifyNo(classifyNo);
+        return sysService.redecorateBook(user,book);
+    }
 }
