@@ -1,0 +1,45 @@
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> </title>
+		
+		<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+		<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+		<link href="css/admin.css" rel="stylesheet" type="text/css"/>
+		
+	</head>
+	
+	<body>
+		<div class="navbar navbar-default">
+			<div id="admin_top_list" class="container-fluid">
+				<div class="navbar-header">
+					<p class="navbar-brand">welcome</p>
+				</div>
+				<ul class="nav navbar-nav navbar-right container-fluid">
+					<li><a v-on:click="change(0)" href="#">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> 读者管理</a></li>
+					<li><a v-on:click="change(1)" href="#">
+						<span class="glyphicon glyphicon-book" aria-hidden="true"></span> 图书管理</a></li>
+					<li><a v-on:click="change(2)" href="#" >
+						<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> 借书管理</a></li>
+					<li><a v-on:click="change(3)" href="#">
+						<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> 还书管理</a></li>
+					<li><a v-on:click="change(4)" href="#">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> 管理员</a></li>
+				</ul>
+			</div>
+		</div>
+	
+		
+			
+			<!--管理员-->
+			<div id="admin_middle_myself" >
+				
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script type="text/javascript" src="js/page.js"></script>
+</html>

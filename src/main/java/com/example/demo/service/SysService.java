@@ -32,8 +32,12 @@ public class SysService {
      */
     public ResultEntity login(Sys sys, HttpSession httpSession){
     //todo登录
+        logger.info(sys.toString());
         logger.info("进入管理员登录服务");
         sys=sysMapper.login(sys);
+
+        if(sys==null)
+            throw new RuntimeException("用户名或密码错误");
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
         return ResultUtil.success();
     }

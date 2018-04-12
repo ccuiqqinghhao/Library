@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> </title>
+		
+		<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+		<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+		<!--<link href="css/admin.css" rel="stylesheet" type="text/css"/>-->
+
+		<style>
+			body {
+			    font-family: 'Roboto', sans-serif;
+			    font-size: 16px;
+			    font-weight: 300;
+			    color: #888;
+			    line-height: 30px;
+			    /*text-align: center;*/
+			}
+			a, a:hover, a:focus {
+				text-decoration: none;
+			}
+			a {
+				/*text-decoration: none;*/
+				color:#777;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div class="navbar navbar-default">
+			<div id="admin_top_list" class="container-fluid">
+				<div class="navbar-header">
+					<p class="navbar-brand">图书管理系统</p>
+				</div>
+				<ul class="nav navbar-nav navbar-right container-fluid">
+					<li><a href="#">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> 读者管理</a></li>
+					<li><a v-on:click="change(1)" href="#">
+						<span class="glyphicon glyphicon-book" aria-hidden="true"></span> 图书管理</a></li>
+					<li><a v-on:click="change(2)" href="#" >
+						<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> 借书管理</a></li>
+					<li><a v-on:click="change(3)" href="#">
+						<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> 还书管理</a></li>
+					<li><a v-on:click="change(4)" href="#">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> 管理员</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="admin_middle">
+			
+			 <!--图书管理-->
+			<!--<div id="admin_middle_books"  v-if="bookIsHidden">
+				<div class="btn-group btn-group-left">
+					<button class="btn btn-default">
+						<span class="glyphicon glyphicon-plus"></span>新建
+					</button>
+					<button class="btn btn-default">
+						<span class="glyphicon glyphicon-pencil"></span>修改
+					</button>
+					<button class="btn btn-default">
+						<span class="glyphicon glyphicon-remove"></span>删除
+					</button>
+				</div>
+				
+				<div class="admin_middle_table">
+					<table class="table table-bordered table-condensed">
+						<tr>
+							<th><input type="checkbox"></th>
+							<th>图书名</th>
+							<th>图书编号</th>
+							<th>作者</th>
+							<th>出版社</th>
+							<th>价格</th>
+						</tr>
+						
+					</table>
+					
+				</div>
+			</div>
+			
+		</div> -->
+	</body>
+	<!-- <script type="text/javascript" src="js/vue.js"></script> -->
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script type="text/javascript">
+		
+	</script>>
+</html>

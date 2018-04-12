@@ -16,7 +16,7 @@ public interface SysMapper {
      * @return
      */
 
-    @Select("select * from sys where Sno=#{Sno} and password=#{password}")
+    @Select("select * from sys where Sno=#{sno} and Spwd=#{spwd}")
     Sys login(Sys sys);
 
     /**
@@ -190,7 +190,7 @@ public interface SysMapper {
      * @param classifyNo
      * @return
      */
-    @Update("update rdeleted set ReturnDate=sysDate() where Uno=#{uno} and ClassifyNo=#{classifyNo}")
+    @Update("update rdeleted set ReturnDate=sysDate() where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
     Integer updateRdeletedReturnTime(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
 
     /**

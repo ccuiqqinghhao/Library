@@ -25,4 +25,12 @@ public class Sys {
     public void setSpwd(String spwd) {
         this.spwd = spwd;
     }
+
+    @Override
+    public String toString() {
+        return "Sys{" +
+                "sno='" + sno + '\'' +
+                ", spwd='" + spwd + '\'' +
+                '}';
+    }
 }

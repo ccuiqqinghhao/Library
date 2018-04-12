@@ -67,9 +67,10 @@
 			<version>1.5.4.RELEASE</version>
 		</dependency>
 
-
-
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 
 
 	</dependencies>
