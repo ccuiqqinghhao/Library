@@ -71,7 +71,7 @@
   					
 					<button v-on:click="checklogin" type="button" class="btn btn-Default form-control">登录</button>
 					<small  class="adminLogin_middle-form-text-error">{{error}}</small>
-					<!--<p>{{no}}{{pwd}}</p>-->
+
 					
 				</div>
 			</form>
@@ -126,7 +126,10 @@
 					axios.post('sys/login',params).then(function(reponse){
 						vm.error=reponse.data.msg;
                         console.log(reponse);
-                        window.location.href="admin";
+                        if(vm.error=="success")
+                        	window.location.href="admin";
+                        else
+                        	return
 
 					}).catch(function(error){
                         console.log(error);

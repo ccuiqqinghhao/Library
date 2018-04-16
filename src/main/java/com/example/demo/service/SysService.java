@@ -39,6 +39,7 @@ public class SysService {
         if(sys==null)
             throw new RuntimeException("用户名或密码错误");
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
+        
         return ResultUtil.success();
     }
 

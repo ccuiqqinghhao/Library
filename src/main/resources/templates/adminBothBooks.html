@@ -44,7 +44,7 @@
             <th>总数量</th>
             <th>借出数量</th>
         </tr>
-        <tr v-for="product int products">
+        <tr v-for="product in products">
             <td>{{product.classifyNo}}</td>
             <td>{{product.bname}}</td>
             <td>{{product.bwriter}}</td>
@@ -55,23 +55,23 @@
             <td>{{product.btotalNum}}</td>
             <td>{{product.bborrowedNum}}</td>
         </tr>
+
     </table>
+
 </div>
 </body>
-<!-- <script type="text/javascript" src="js/vue.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript">
 
-    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    Vue.prototype.$axios = axios;
+
     new Vue({
         el:'#bookInfo',
         data:{
             input:'',
-            products:[],
-
+            products:'',
         },
         methods:{
             checkInput:function(){
@@ -81,13 +81,13 @@
             select:function(){
                 var vm=this;
                 var url="sys/SelectBookByBname/"+vm.input;
-                axios.get(url).then(function(reponse){
-                    if(reponse.data.msg!="success"){
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
                         vm.error=reponse.data.msg;
                         return;
                     }
-                    vm.products=reponse;
-                    console.log(reponse.data.data);
+                    vm.products=response.data.data;
+                    console.log(response.data.data);
                 }).catch(function(error){
                     console.log(error);
                 });
