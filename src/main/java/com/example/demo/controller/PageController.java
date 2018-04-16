@@ -14,22 +14,18 @@ public class PageController {
     public String admin(){
         return "admin";
     }
-    @RequestMapping("/adminBooks")
-    public String adminBooks(){
-        return "admin_Books";
-    }
-    @RequestMapping("/adminBorrow")
-    public String adminBorrow(){
-        return "admin_Borrow";
-    }
-    @RequestMapping("/adminReturn")
-    public String adminReturn(){
-        return "admin_Return";
-    }
-    @RequestMapping("/adminUsers")
-    public String adminUsers(){
-        return "admin_Users";
+    @RequestMapping("/adminBookAdd")
+    public String adminBookAdd(){
+        return "adminBookAdd";
     }
 
+    @RequestMapping("/adminUserAdd")
+    public String adminUserAdd(){
+        return "adminUserAdd";
+    }
+    @RequestMapping("/adminBothBooks")
+    public String adminBothBooks(){
+        return "adminBothBooks";
+    }
 
 }

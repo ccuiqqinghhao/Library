@@ -1,0 +1,99 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> </title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: #888;
+            line-height: 30px;
+            /*text-align: center;*/
+        }
+        a, a:hover, a:focus {
+            text-decoration: none;
+        }
+        a {
+            /*text-decoration: none;*/
+            color:#777;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+    <div>
+        <input type="text" class="form-control" placeholder="请输入书名" v-model="input">
+        <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+    </div>
+    <table class="table table-hover table-condensed">
+        <tr>
+            <th>图书编号</th>
+            <th>书名</th>
+            <th>作者</th>
+            <th>出版社</th>
+            <th>出版日期</th>
+            <th>价格</th>
+            <th>类别</th>
+            <th>总数量</th>
+            <th>借出数量</th>
+        </tr>
+        <tr v-for="product int products">
+            <td>{{product.classifyNo}}</td>
+            <td>{{product.bname}}</td>
+            <td>{{product.bwriter}}</td>
+            <td>{{product.bpubAdr}}</td>
+            <td>{{product.bpubDate}}</td>
+            <td>{{product.bprice}}</td>
+            <td>{{product.btype}}</td>
+            <td>{{product.btotalNum}}</td>
+            <td>{{product.bborrowedNum}}</td>
+        </tr>
+    </table>
+</div>
+</body>
+<!-- <script type="text/javascript" src="js/vue.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    Vue.prototype.$axios = axios;
+    new Vue({
+        el:'#bookInfo',
+        data:{
+            input:'',
+            products:[],
+
+        },
+        methods:{
+            checkInput:function(){
+                if(this.input!='')
+                    this.select();
+            },
+            select:function(){
+                var vm=this;
+                var url="sys/SelectBookByBname/"+vm.input;
+                axios.get(url).then(function(reponse){
+                    if(reponse.data.msg!="success"){
+                        vm.error=reponse.data.msg;
+                        return;
+                    }
+                    vm.products=reponse;
+                    console.log(reponse.data.data);
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+
+        }
+    });
+</script>
+</html>

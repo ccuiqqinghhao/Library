@@ -155,6 +155,7 @@ public class SysController {
      */
     @PostMapping(value="/insertBook")
     public ResultEntity insertBook(@Valid Book book){
+
         return sysService.insertBook(book);
     }
 

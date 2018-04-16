@@ -89,10 +89,8 @@
 		new Vue({
 			el:'#loginform',
 			data:{
-
-                    no:'',
-                    pwd:'',
-
+				no:'',
+				pwd:'',
 				role:'user',
 				error:'用户名或密码不能为空',
 			},
@@ -129,6 +127,7 @@
 						vm.error=reponse.data.msg;
                         console.log(reponse);
                         window.location.href="admin";
+
 					}).catch(function(error){
                         console.log(error);
                     });

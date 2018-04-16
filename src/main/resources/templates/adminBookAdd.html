@@ -1,0 +1,163 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> </title>
+		
+		<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+		<link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+		<style>
+			body {
+			    font-family: 'Roboto', sans-serif;
+			    font-size: 16px;
+			    font-weight: 300;
+			    color: #888;
+			    line-height: 30px;
+			    /*text-align: center;*/
+			}
+			a, a:hover, a:focus {
+				text-decoration: none;
+			}
+			a {
+				/*text-decoration: none;*/
+				color:#777;
+			}
+		</style>
+	</head>
+	<body>
+		
+		
+		<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+                <div class="form-group">
+                    <label>图书编号</label>
+                    <input type="text" class="form-control" placeholder="请输入图书编号" v-model="ClassifyNo">
+                </div>
+                <div class="form-group">
+                    <label>图书名</label>
+                    <input type="text" class="form-control" placeholder="请输入书名" v-model="Bname">
+                </div>
+                <div class="form-group">
+                    <label>作者</label>
+                    <input type="text" class="form-control" placeholder="请输入作者名" v-model="Bwriter">
+                </div>
+                <div class="form-group">
+                    <label>出版社</label>
+                    <input type="text" class="form-control" placeholder="请输入出版社" v-model="BpubAdr">
+                </div>
+                <div class="form-group">
+                    <label>出版日期</label>
+                    <input type="text" class="form-control" placeholder="请输入出版日期" v-model="BpubDate">
+                </div>
+                <div class="form-group">
+                    <label>价格</label>
+                    <input type="text" class="form-control" placeholder="请输入价格" v-model="Bprice">
+                </div>
+                <div class="form-group">
+                    <label>类别</label>
+                    <input type="text" class="form-control" placeholder="请输入类别" v-model="Btype">
+                </div>
+                <div class="form-group">
+                    <label>图书数量</label>
+                    <input type="text" class="form-control" placeholder="请输入数量" v-model="BtotalNum">
+                </div>
+                <button v-on:click="checkAdd" type="button" class="btn btn-Default form-control">添加</button>
+                <small  class="adminLogin_middle-form-text-error">{{error}}</small>
+        </div>
+	</body>
+	<!-- <script type="text/javascript" src="js/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        Vue.prototype.$axios = axios;
+        new Vue({
+            el:'#bookInfo',
+            data:{
+
+                    ClassifyNo:'',
+                    Bname:'',
+                    Bwriter:'',
+                    BpubAdr:'',
+                    BpubDate:'',
+                    Bprice:'',
+                    Btype:'',
+                    BtotalNum:'',
+
+
+                error:'不能为空',
+            },
+            watch:{
+                ClassifyNo:function(){
+                    this.checkIsNull();
+                },
+                Bname:function(){
+                    this.checkIsNull();
+                },
+                Bwriter:function(){
+                    this.checkIsNull();
+                },
+                BpubAdr:function(){
+                    this.checkIsNull();
+                },
+                BpubDate:function(){
+                    this.checkIsNull();
+                },
+                Bprice:function(){
+                    this.checkIsNull();
+                },
+                Btype:function(){
+                    this.checkIsNull();
+                },
+                BtotalNum:function(){
+                    this.checkIsNull();
+                },
+            },
+            methods:{
+                checkIsNull:_.debounce(
+                    function(){
+                        if(this.ClassifyNo==''||
+                            this.Bname==''||
+                            this.Bwriter==''||
+                            this.BpubAdr==''||
+                            this.BpubDate==''||
+                            this.Bprice==''||
+                            this.Btype==''||
+                            this.BtotalNum==''){
+                            this.error='不能为空';
+                            return
+                        }
+                        this.error='';
+                    },100
+                ),
+                checkAdd:function(){
+                    if(this.error==''&&this.no!=''&&this.pwd!='')
+                        this.add();
+                },
+                add:function(){
+                    var vm=this;
+                    var params = new URLSearchParams();
+                    params.append('classifyNo', vm.ClassifyNo);
+                    params.append('bname', vm.Bname);
+                    params.append('bwriter', vm.Bwriter);
+                    params.append('bpubAdr', vm.BpubAdr);
+                    params.append('bpubDate', vm.BpubDate);
+                    params.append('bprice', vm.Bprice);
+                    params.append('btype', vm.Btype);
+                    params.append('btotalNum', vm.BtotalNum);
+                    axios.post('sys/insertBook',params).then(function(reponse){
+                        if(reponse.data.msg!="success"){
+                            vm.error=reponse.data.msg;
+                            return
+                        }
+                        alert("添加成功");
+                        window.location.href="admin";
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                }
+
+            }
+        });
+    </script>
+</html>
