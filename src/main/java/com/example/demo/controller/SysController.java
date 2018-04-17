@@ -206,4 +206,13 @@ public class SysController {
         book.setClassifyNo(classifyNo);
         return sysService.redecorateBook(user,book);
     }
+
+    /**
+     * 查询所有日志
+     * @return
+     */
+    @GetMapping("/bothLog")
+    public ResultEntity selectBothLog(){
+        return sysService.selectBothLog();
+    }
 }

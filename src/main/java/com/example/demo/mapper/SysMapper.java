@@ -1,5 +1,6 @@
 package com.example.demo.mapper;
 import com.example.demo.entity.Book;
+import com.example.demo.entity.Log;
 import com.example.demo.entity.Sys;
 import com.example.demo.entity.User;
 import org.apache.ibatis.annotations.*;
@@ -211,7 +212,8 @@ public interface SysMapper {
     Integer deleteUserBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
     /**图书归还部分结束*/
 
+    //todo 添加一个查询所有日志的接口
 
-
-
+    @Select("select * from rdeleted")
+    List<Log> selectBothLog();
 }

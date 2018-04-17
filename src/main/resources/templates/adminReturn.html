@@ -1,0 +1,103 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title> </title>
+
+	<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+	<link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+	<style>
+		body {
+			font-family: 'Roboto', sans-serif;
+			font-size: 16px;
+			font-weight: 300;
+			color: #888;
+			line-height: 30px;
+			/*text-align: center;*/
+		}
+		a, a:hover, a:focus {
+			text-decoration: none;
+		}
+		a {
+			/*text-decoration: none;*/
+			color:#777;
+		}
+	</style>
+</head>
+<body>
+
+
+
+<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+	<div class="form-group">
+		<label>图书编号</label>
+		<input type="text" class="form-control" placeholder="请输入图书编号" v-model="ClassifyNo">
+	</div>
+
+	<div class="form-group">
+		<label>读者ID</label>
+		<input type="text" class="form-control" placeholder="请输入读者ID" v-model="Uno">
+	</div>
+	<button v-on:click="checkAdd" type="button" class="btn btn-Default form-control">确定</button>
+	<small  class="adminLogin_middle-form-text-error">{{error}}</small>
+</div>
+</body>
+<!-- <script type="text/javascript" src="js/vue.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    Vue.prototype.$axios = axios;
+    new Vue({
+        el:'#bookInfo',
+        data:{
+            ClassifyNo:'',
+            Uno:'',
+            error:'不能为空',
+        },
+        watch:{
+            ClassifyNo:function(){
+                this.checkIsNull();
+            },
+            Uno:function(){
+                this.checkIsNull();
+            }
+        },
+        methods:{
+            checkIsNull:_.debounce(
+                function(){
+                    if(this.ClassifyNo==''||
+                        this.Uno==''){
+                        this.error='不能为空';
+                        return
+                    }
+                    this.error='';
+                },100
+            ),
+            checkAdd:function(){
+                if(this.error==''&&this.Uno!=''&&this.ClassifyNo!='')
+                    this.add();
+            },
+            add:function(){
+                var vm=this;
+                var params = new URLSearchParams();
+                params.append('classifyNo', vm.ClassifyNo);
+                params.append('uno', vm.Uno);
+
+                axios.post('sys/returnBook',params).then(function(reponse){
+                    if(reponse.data.msg!="success"){
+                        vm.error=reponse.data.msg;
+                        return
+                    }
+                    alert("归还成功");
+                    window.location.href="admin";
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+
+        }
+    });
+</script>
+</html>

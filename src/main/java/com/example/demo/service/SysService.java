@@ -231,7 +231,14 @@ public class SysService {
             if (sysMapper.updateRdeletedUReborrowTimes(user.getUno(), book.getClassifyNo())==1)
                 return ResultUtil.success();
 
-
         throw new RuntimeException("续借失败");
+    }
+
+    /**
+     * 查询所有日志
+     * @return
+     */
+    public ResultEntity selectBothLog(){
+        return ResultUtil.success(sysMapper.selectBothLog());
     }
 }

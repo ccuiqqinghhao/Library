@@ -1,0 +1,188 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> </title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: #888;
+            line-height: 30px;
+            /*text-align: center;*/
+        }
+        a, a:hover, a:focus {
+            text-decoration: none;
+        }
+        a {
+            /*text-decoration: none;*/
+            color:#777;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div id="bRInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+
+        <table class="table table-hover table-condensed">
+            <tr>
+                <th>#</th>
+                <th>读者ID</th>
+                <th>图书编号</th>
+                <th>借阅日期</th>
+                <th>续借次数</th>
+                <th>归还日期</th>
+
+            </tr>
+            <tr v-for="product in products">
+
+                <td>{{product.id}}</td>
+                <td><a v-model="input" value={{product.uno}} data-toggle="modal" data-target="#userModal">{{product.uno}}</a></td>
+                <td><a v-model="input" value={{product.classifyNo}} data-toggle="modal" data-target="#bookModal">{{product.classifyNo}}</a></td>
+                <td>{{product.uBorrowDate}}</td>
+                <td>{{product.uReborrowTimes}}</td>
+                <td>{{product.returnDate}}</td>
+
+            </tr>
+        </table>
+        <p>{{input}}</p>
+    </div>
+        <!--读者详情modal-->
+        <div class="modal fade bs-example-modal-lg" id="userModal" tabindex="-1" role="dialog" aria-labelledby=""myModalLabel aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">读者详情</h4>
+                </div>
+                <div id="userInfo">
+                    <table class="table table-striped">
+                        <tr><td>读者ID</td><td>{{product.uno}}</td></tr>
+                        <tr><td>姓名</td><td>{{product.uname}}</td></tr>
+                        <tr><td>性别</td><td>{{product.usex}}</td></tr>
+                        <tr><td>生日</td><td>{{product.ubirth}}</td></tr>
+                        <tr><td>联系方式</td><td>{{product.uphone}}</td></tr>
+                        <tr><td>职称</td><td>{{product.uposition}}</td></tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+        <!--图书详情modal-->
+        <div class="modal fade bs-example-modal-lg" id="bookModal" tabindex="-1" role="dialog" aria-labelledby=""myModalLabel aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">图书详情</h4>
+                    </div>
+                    <div id="bookInfo">
+                        <table class="table table-striped">
+                            <tr><td>图书编号</td><td>{{product.classifyNo}}</td></tr>
+                            <tr><td>图书名称</td><td>{{product.bname}}</td></tr>
+                            <tr><td>作者</td><td>{{product.bwriter}}</td></tr>
+                            <tr><td>出版社</td><td>{{product.bpubAdr}}</td></tr>
+                            <tr><td>出版日期</td><td>{{product.bpubDate}}</td></tr>
+                            <tr><td>价格</td><td>{{product.bprice}}</td></tr>
+                            <tr><td>类别</td><td>{{product.btype}}</td></tr>
+                            <tr> <td>总数量</td><td>{{product.btotalNum}}</td></tr>
+                            <tr><td>借出数量</td><td>{{product.bborrowedNum}}</td></tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+</body>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/bootstrap.js" ></script>
+<script type="text/javascript">
+
+    window.onload=function(){
+        selectLog.select("sys/bothLog");
+    };
+    var selectLog =new Vue({
+        el:'#bRInfo',
+        data:{
+            products:'',
+            input:'',
+        },
+        methods:{
+            select:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
+                        vm.error=response.data.msg;
+                        return;
+                    }
+                    vm.products=response.data.data;
+                    console.log(response);
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+        }
+    });
+    //modal的Vue
+    var user=new Vue({
+        el:"#userInfo",
+        data:{
+            product:function(){
+                axios.get("sys/selectUser/"+selectLog.input).then(function(response){
+                    if(response.data.msg!="success"){
+                        vm.error=response.data.msg;
+                        return;
+                    }
+                    return response.data.data;
+                }).catch(function(error){
+                    console.log(error);
+                });
+            },
+        },
+
+    });
+    var book=new Vue({
+        el:"#bookInfo",
+        data:{
+            product:'',
+        },
+        methods:{
+            selectBook:function(){
+                url="sys/selectUser/"+selectLog.input;
+                this.select(url);
+            },
+            select:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
+                        vm.error=response.data.msg;
+                        return;
+                    }
+                    vm.products=response.data.data;
+                    console.log(response);
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+        }
+
+    });
+</script>
+</html>

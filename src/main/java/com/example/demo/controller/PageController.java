@@ -32,4 +32,9 @@ public class PageController {
     public String adminBothUsers(){
         return "adminBothUsers";
     }
+
+    @RequestMapping("/adminBRLog")
+    public String adminBRLog(){
+        return "adminBRLog";
+    }
 }
