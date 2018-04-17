@@ -42,8 +42,8 @@
             <tr v-for="product in products">
 
                 <td>{{product.id}}</td>
-                <td><a v-model="input" value={{product.uno}} data-toggle="modal" data-target="#userModal">{{product.uno}}</a></td>
-                <td><a v-model="input" value={{product.classifyNo}} data-toggle="modal" data-target="#bookModal">{{product.classifyNo}}</a></td>
+                <td><a v-on:click=selectUser data-toggle="modal" data-target="#userModal">{{product.uno}}</a></td>
+                <td><a v-on:click=selectBook data-toggle="modal" data-target="#bookModal">{{product.classifyNo}}</a></td>
                 <td>{{product.uBorrowDate}}</td>
                 <td>{{product.uReborrowTimes}}</td>
                 <td>{{product.returnDate}}</td>
@@ -125,6 +125,12 @@
             input:'',
         },
         methods:{
+            selectUser:function(event){
+                user.selectUser(event.target.text);
+            },
+            selectBook:function(event){
+                book.selectBook(event.target.text);
+            },
             select:function(url){
                 var vm=this;
                 axios.get(url).then(function(response){
@@ -144,39 +150,47 @@
     var user=new Vue({
         el:"#userInfo",
         data:{
-            product:function(){
-                axios.get("sys/selectUser/"+selectLog.input).then(function(response){
+            product:'',
+        },
+        methods:{
+            selectUser:function(input){
+                url="sys/selectUser/"+input;
+                this.selectUserNow(url);
+            },
+            selectUserNow:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+
                     if(response.data.msg!="success"){
-                        vm.error=response.data.msg;
+                        slert(response.data.msg);
                         return;
                     }
-                    return response.data.data;
+                    vm.product=response.data.data[0];
                 }).catch(function(error){
                     console.log(error);
                 });
-            },
-        },
+            }
+        }
 
     });
     var book=new Vue({
-        el:"#bookInfo",
+        el:"#bookModal",
         data:{
             product:'',
         },
         methods:{
-            selectBook:function(){
-                url="sys/selectUser/"+selectLog.input;
-                this.select(url);
+            selectBook:function(input){
+                url="sys/selectBookByClassifyNo/"+input;
+                this.selectBookNow(url);
             },
-            select:function(url){
+            selectBookNow:function(url){
                 var vm=this;
                 axios.get(url).then(function(response){
                     if(response.data.msg!="success"){
                         vm.error=response.data.msg;
                         return;
                     }
-                    vm.products=response.data.data;
-                    console.log(response);
+                    vm.product=response.data.data[0];
                 }).catch(function(error){
                     console.log(error);
                 });

@@ -43,6 +43,8 @@
             <th>类别</th>
             <th>总数量</th>
             <th>借出数量</th>
+            <th></th>
+            <th></th>
         </tr>
         <tr v-for="product in products">
             <td>{{product.classifyNo}}</td>
@@ -54,6 +56,9 @@
             <td>{{product.btype}}</td>
             <td>{{product.btotalNum}}</td>
             <td>{{product.bborrowedNum}}</td>
+            <td><button></button></td>
+            <td></td>
+            //todo 再改改
         </tr>
 
     </table>
@@ -76,11 +81,10 @@
         methods:{
             checkInput:function(){
                 if(this.input!='')
-                    this.select();
+                    this.select("sys/SelectBookByBname/"+this.input);
             },
-            select:function(){
+            select:function(url){
                 var vm=this;
-                var url="sys/SelectBookByBname/"+vm.input;
                 axios.get(url).then(function(response){
                     if(response.data.msg!="success"){
                         vm.error=response.data.msg;
