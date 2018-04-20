@@ -84,9 +84,10 @@ public class SysService {
      */
     public ResultEntity deleteBook(Book book){
         logger.info("开始删除图书");
-        if(sysMapper.deleteBook(book)==1)
-            return ResultUtil.success();
-        throw new RuntimeException("删除图书失败");
+        if(sysMapper.deleteBook(book)==null)
+            throw new RuntimeException("删除图书失败");
+        return ResultUtil.success();
+
     }
 
     /**

@@ -27,76 +27,249 @@
 
 
 
-<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
-    <div>
-        <input type="text" class="form-control" placeholder="请输入书名" v-model="input">
-        <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+    <div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+        <div>
+            <input type="text" class="form-control" placeholder="请输入书名" v-model="inputName">
+            <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+        </div>
+        <table class="table table-hover table-condensed">
+            <tr>
+                <th>图书编号</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>出版日期</th>
+                <th>价格</th>
+                <th>类别</th>
+                <th>总数量</th>
+                <th>借出数量</th>
+                <th>编辑</th>
+                <th>删除</th>
+            </tr>
+            <tr v-for="product in products">
+                <td>{{product.classifyNo}}</td>
+                <td>{{product.bname}}</td>
+                <td>{{product.bwriter}}</td>
+                <td>{{product.bpubAdr}}</td>
+                <td>{{product.bpubDate}}</td>
+                <td>{{product.bprice}}</td>
+                <td>{{product.btype}}</td>
+                <td>{{product.btotalNum}}</td>
+                <td>{{product.bborrowedNum}}</td>
+                <td><button v-on:click="selectWillUpdate" type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#updateBook">编辑</button></td>
+                <td><button v-on:click="willDelete" type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#isDelete">删除</button></td>
+            </tr>
+
+        </table>
     </div>
-    <table class="table table-hover table-condensed">
-        <tr>
-            <th>图书编号</th>
-            <th>书名</th>
-            <th>作者</th>
-            <th>出版社</th>
-            <th>出版日期</th>
-            <th>价格</th>
-            <th>类别</th>
-            <th>总数量</th>
-            <th>借出数量</th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr v-for="product in products">
-            <td>{{product.classifyNo}}</td>
-            <td>{{product.bname}}</td>
-            <td>{{product.bwriter}}</td>
-            <td>{{product.bpubAdr}}</td>
-            <td>{{product.bpubDate}}</td>
-            <td>{{product.bprice}}</td>
-            <td>{{product.btype}}</td>
-            <td>{{product.btotalNum}}</td>
-            <td>{{product.bborrowedNum}}</td>
-            <td><button></button></td>
-            <td></td>
-            //todo 再改改
-        </tr>
+    <!--提示是否删除-->
+    <div id="isDelete" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">警告</h4>
+                </div>
+                <div class="modal-body">
+                    <p>是否删除{{willDeleteclassifyNo}}?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button v-on:click="delete" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--成功的模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" arjia-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">详情</h4>
+                </div>
+                <div class="modal-body">
+                    <p>这个地方放后端返回的信息</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--编辑的模态框-->
+    <div id="updateBook" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" arjia-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">更新图书信息</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tr><td>图书编号</td><td>{{classifyNo}}</td></tr>
+                        <tr><td>图书名称</td><td><input v-model="bname"></td></tr>
+                        <tr><td>作者</td><td><input v-model="bwriter"></td></tr>
+                        <tr><td>出版社</td><td><input v-model="bpubAdr"></td></tr>
+                        <tr><td>出版日期</td><td><input v-model="bpubDate"></td></tr>
+                        <tr><td>价格</td><td><input v-model="bprice"></td></tr>
+                        <tr><td>类别</td><td><input v-model="btype"></td></tr>
+                    </table>
+                    <p>{{error}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
+                    <button v-on:click="checkUpdate" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </table>
 
-</div>
 </body>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/bootstrap.js" ></script>
 <script type="text/javascript">
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    Vue.prototype.$axios = axios;
 
-
-    new Vue({
+    var thisPage=new Vue({
         el:'#bookInfo',
         data:{
-            input:'',
-            products:'',
+            inputName:'',//用于搜索
+            products:'',//所有信息
         },
         methods:{
+            //搜索所有信息
             checkInput:function(){
-                if(this.input!='')
-                    this.select("sys/SelectBookByBname/"+this.input);
+                if(this.inputName!='') {
+                    this.$axios.get("sys/SelectBookByBname/" + this.inputName).then(function(response){
+                        thisPage.products=response.data.data;
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                }
             },
-            select:function(url){
-                var vm=this;
-                axios.get(url).then(function(response){
-                    if(response.data.msg!="success"){
-                        vm.error=response.data.msg;
-                        return;
-                    }
-                    vm.products=response.data.data;
+            selectWillUpdate:function(event){
+                var willUpdate=event.target.parentNode.parentNode.childNodes[1].textContent;
+                this.$axios.get("sys/selectBookByClassifyNo/"+willUpdate).then(function(response){
+                    updateVue.classifyNo=response.data.data[0].classifyNo;
+                    updateVue.bname=response.data.data[0].bname;
+                    updateVue.bwriter=response.data.data[0].bwriter;
+                    updateVue.bpubAdr=response.data.data[0].bpubAdr;
+                    updateVue.bpubDate=response.data.data[0].bpubDate;
+                    updateVue.bprice=response.data.data[0].bprice;
+                    updateVue.btype=response.data.data[0].btype;
                 }).catch(function(error){
                     console.log(error);
                 });
+
+            },
+            willDelete:function(event){
+                var willdelete=event.target.parentNode.parentNode.childNodes[1].textContent;
+                deleteVue.classifyNo=willdelete;
             }
 
         }
+    });
+    var updateVue=new Vue({
+        el:"#updateBook",
+        data:{
+            classifyNo:'',
+            bname:'',
+            bwriter:'',
+            bpubAdr:'',
+            bpubDate:'',
+            bprice:'',
+            btype:'',
+            error:'',
+        },
+        watch:{
+            classifyNo:function(){
+                this.checkIsNull();
+            },
+            bname:function(){
+                this.checkIsNull();
+            },
+            bwriter:function(){
+                this.checkIsNull();
+            },
+            bpubAdr:function(){
+                this.checkIsNull();
+            },
+            bpubDate:function(){
+                this.checkIsNull();
+            },
+            bprice:function(){
+                this.checkIsNull();
+            },
+            btype:function(){
+                this.checkIsNull();
+            },
+
+        },
+        methods:{
+            checkIsNull:_.debounce(
+                function(){
+                    if(this.bname==''||
+                        this.bwriter==''||
+                        this.bpubAdr==''||
+                        this.bpubDate==''||
+                        this.bprice==''||
+                        this.btype==''){
+                        this.error='不能为空';
+                        return
+                    }
+                    this.error='';
+                },100
+            ),
+            checkUpdate:function(){
+                if(this.error==''){
+                    var params = new URLSearchParams();
+                    params.append('classifyNo',this.classifyNo);
+                    params.append('bname', this.bname);
+                    params.append('bwriter', this.bwriter);
+                    params.append('bpubAdr', this.bpubAdr);
+                    params.append('bpubDate', this.bpubDate);
+                    params.append('bprice', this.bprice);
+                    params.append('btype', this.btype);
+                    axios.post("sys/updateBook",params).then(function(response){
+                        if(response.data.msg!="success")
+                            alert("更新失败");
+                        else
+                            alert("更新成功");
+                    }).catch(function (error) {
+                        console.info(error);
+                    })
+
+                }
+
+            },
+        },
+    });
+    var deleteVue=new Vue({
+        el:"#isDelete",
+        data:{
+            classifyNo:'',
+        },
+        methods:{
+            delete:function(){
+                var params = new URLSearchParams();
+                params.append('classifyNo',this.classifyNo);
+                axios.post("sys/deleteBook",params).then(function(response){
+                    if(response.data.msg!="success")
+                        alert("删除失败");
+                    else
+                        alert("删除成功");
+                }).catch(function (error) {
+                    console.info(error);
+                })
+
+            },
+        },
     });
 </script>
 </html>

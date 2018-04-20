@@ -117,14 +117,14 @@ public class SysController {
      * @param btype
      * @return
      */
-    @PostMapping(value="updateBook/{ClassifyNo}")
-    public ResultEntity updateBook(@PathVariable("ClassifyNo")String classifyNo,
-                                   @RequestParam("Bname") String bname,
-                                   @RequestParam("Bwriter")String bwriter,
-                                   @RequestParam("BpubAdr")String bpubAdr,
-                                   @RequestParam("BpubDate")String bpubDate,
-                                   @RequestParam("Bprice")Integer bprice,
-                                   @RequestParam("Btype")String btype) {
+    @PostMapping(value="/updateBook")
+    public ResultEntity updateBook(@RequestParam("classifyNo")String classifyNo,
+                                   @RequestParam("bname") String bname,
+                                   @RequestParam("bwriter")String bwriter,
+                                   @RequestParam("bpubAdr")String bpubAdr,
+                                   @RequestParam("bpubDate")String bpubDate,
+                                   @RequestParam("bprice")Integer bprice,
+                                   @RequestParam("btype")String btype) {
         Book book = new Book();
         book.setClassifyNo(classifyNo);
         book.setBname(bname);
@@ -141,8 +141,8 @@ public class SysController {
      * @param classifyNo
      * @return
      */
-    @PostMapping(value="/deleteBook/{ClassifyNO}")
-    public ResultEntity deleteBook(@PathVariable("ClassifyNo") String classifyNo){
+    @PostMapping(value="/deleteBook")
+    public ResultEntity deleteBook(@RequestParam("classifyNo")String classifyNo){
         Book book=new Book();
         book.setClassifyNo(classifyNo);
         return sysService.deleteBook(book);

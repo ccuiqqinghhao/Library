@@ -37,4 +37,12 @@ public class PageController {
     public String adminBRLog(){
         return "adminBRLog";
     }
+    @RequestMapping("/adminBorrow")
+    public String adminBorrow(){
+        return "adminBorrow";
+    }
+    @RequestMapping("/adminReturn")
+    public String adminReturn(){
+        return "adminReturn";
+    }
 }

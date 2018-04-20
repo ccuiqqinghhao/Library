@@ -146,8 +146,8 @@
                     params.append('bprice', vm.Bprice);
                     params.append('btype', vm.Btype);
                     params.append('btotalNum', vm.BtotalNum);
-                    axios.post('sys/insertBook',params).then(function(reponse){
-                        if(reponse.data.msg!="success"){
+                    axios.post('sys/insertBook',params).then(function(response){
+                        if(response.data.msg!="success"){
                             vm.error=reponse.data.msg;
                             return
                         }

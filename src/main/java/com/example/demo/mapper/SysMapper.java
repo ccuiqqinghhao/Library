@@ -90,7 +90,7 @@ public interface SysMapper {
      * @param book
      */
     @Delete("delete from book where ClassifyNo=#{classifyNo}")
-    Integer deleteBook(Book book);
+    Book deleteBook(Book book);
 
 
     /**
