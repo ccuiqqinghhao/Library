@@ -26,9 +26,12 @@
 <body>
 
 
-
     <div id="bRInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
 
+        <div>
+            <input type="text" class="form-control" placeholder="输入用户ID可查询该用户借阅记录" v-model="input">
+            <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+        </div>
         <table class="table table-hover table-condensed">
             <tr>
                 <th>#</th>
@@ -50,7 +53,7 @@
 
             </tr>
         </table>
-        <p>{{input}}</p>
+
     </div>
         <!--读者详情modal-->
         <div class="modal fade bs-example-modal-lg" id="userModal" tabindex="-1" role="dialog" aria-labelledby=""myModalLabel aria-hidden="true">
@@ -131,6 +134,12 @@
             selectBook:function(event){
                 book.selectBook(event.target.text);
             },
+            checkInput:function(){
+                if(this.input==='')
+                    selectLog.select("sys/bothLog");
+                else
+                    this.select("sys/userLog/"+this.input);
+            },
             select:function(url){
                 var vm=this;
                 axios.get(url).then(function(response){
@@ -139,7 +148,6 @@
                         return;
                     }
                     vm.products=response.data.data;
-                    console.log(response);
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -160,14 +168,12 @@
             selectUserNow:function(url){
                 var vm=this;
                 axios.get(url).then(function(response){
-
                     if(response.data.msg!="success"){
-                        slert(response.data.msg);
-                        return;
+                        alert(response.data.msg);
                     }
                     vm.product=response.data.data[0];
                 }).catch(function(error){
-                    console.log(error);
+                    //console.log(error);
                 });
             }
         }
@@ -187,12 +193,11 @@
                 var vm=this;
                 axios.get(url).then(function(response){
                     if(response.data.msg!="success"){
-                        vm.error=response.data.msg;
-                        return;
+                        alert(response.data.msg);
                     }
                     vm.product=response.data.data[0];
                 }).catch(function(error){
-                    console.log(error);
+                    //console.log(error);
                 });
             }
         }

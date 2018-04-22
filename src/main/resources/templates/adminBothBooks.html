@@ -26,7 +26,6 @@
 <body>
 
 
-
     <div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
         <div>
             <input type="text" class="form-control" placeholder="请输入书名" v-model="inputName">
@@ -67,7 +66,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">警告</h4>
+                    <h4 style="color:#e00;" class="modal-title">警告</h4>
                 </div>
                 <div class="modal-body">
                     <p>是否删除{{willDeleteclassifyNo}}?</p>
@@ -75,23 +74,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
                     <button v-on:click="delete" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--成功的模态框-->
-    <div class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" arjia-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">详情</h4>
-                </div>
-                <div class="modal-body">
-                    <p>这个地方放后端返回的信息</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -114,17 +96,16 @@
                         <tr><td>价格</td><td><input v-model="bprice"></td></tr>
                         <tr><td>类别</td><td><input v-model="btype"></td></tr>
                     </table>
-                    <p>{{error}}</p>
+
                 </div>
                 <div class="modal-footer">
+                    <div style="float:left; color:#e00;"><p>{{error}}</p></div>
                     <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
                     <button v-on:click="checkUpdate" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
                 </div>
             </div>
         </div>
     </div>
-
-
 </body>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
@@ -136,6 +117,9 @@
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     Vue.prototype.$axios = axios;
 
+    window.onload=function(){
+        thisPage.checkInput();
+    }
     var thisPage=new Vue({
         el:'#bookInfo',
         data:{
@@ -145,13 +129,17 @@
         methods:{
             //搜索所有信息
             checkInput:function(){
-                if(this.inputName!='') {
-                    this.$axios.get("sys/SelectBookByBname/" + this.inputName).then(function(response){
-                        thisPage.products=response.data.data;
-                    }).catch(function(error){
-                        console.log(error);
-                    });
-                }
+                if(this.inputName!='')
+                    this.select("sys/SelectBookByBname/" + this.inputName);
+                else
+                    this.select("sys/selectBothBooks");
+            },
+            select:function(url){
+                this.$axios.get(url).then(function(response){
+                    thisPage.products=response.data.data;
+                }).catch(function(error){
+                    console.log(error);
+                });
             },
             selectWillUpdate:function(event){
                 var willUpdate=event.target.parentNode.parentNode.childNodes[1].textContent;
@@ -237,10 +225,8 @@
                     params.append('bprice', this.bprice);
                     params.append('btype', this.btype);
                     axios.post("sys/updateBook",params).then(function(response){
-                        if(response.data.msg!="success")
-                            alert("更新失败");
-                        else
-                            alert("更新成功");
+                        thisPage.checkInput();
+                        alert(response.data.msg);
                     }).catch(function (error) {
                         console.info(error);
                     })
@@ -259,11 +245,9 @@
             delete:function(){
                 var params = new URLSearchParams();
                 params.append('classifyNo',this.classifyNo);
-                axios.post("sys/deleteBook",params).then(function(response){
-                    if(response.data.msg!="success")
-                        alert("删除失败");
-                    else
-                        alert("删除成功");
+                this.$axios.post("sys/deleteBook",params).then(function(response){
+                    thisPage.checkInput();
+                    alert(response.data.msg);
                 }).catch(function (error) {
                     console.info(error);
                 })

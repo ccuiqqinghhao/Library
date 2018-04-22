@@ -7,6 +7,7 @@ public class Log {
     private String uBorrowDate;
     private Integer uReborrowTimes;
     private String returnDate;
+    private String uExpectedReturnDate;
 
     @Override
     public String toString() {
@@ -17,8 +18,19 @@ public class Log {
                 ", uBorrowDate='" + uBorrowDate + '\'' +
                 ", uReborrowTimes=" + uReborrowTimes +
                 ", returnDate='" + returnDate + '\'' +
+                ", uExpectedReturnDate='" + uExpectedReturnDate + '\'' +
                 '}';
     }
+
+    public String getuExpectedReturnDate() {
+        return uExpectedReturnDate;
+    }
+
+    public void setuExpectedReturnDate(String uExpectedReturnDate) {
+        this.uExpectedReturnDate = uExpectedReturnDate;
+    }
+
+
 
     public Integer getId() {
         return id;

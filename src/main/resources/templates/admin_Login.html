@@ -69,7 +69,7 @@
 					<input type="radio" id="sys" value="sys" v-model="role">
   					管理员
   					
-					<button v-on:click="checkIsNull" id="loginButton" type="button" class="btn btn-Default form-control" data-loading-text="登录中...">登录</button>
+					<button v-on:click="checklogin" id="loginButton" type="button" class="btn btn-Default form-control" data-loading-text="登录中...">登录</button>
 					<small  class="adminLogin_middle-form-text-error">{{error}}</small>
 
 					
@@ -119,14 +119,13 @@
 						this.login();
 				},
 				login:function(){
-				    var vm=this;
                     var params = new URLSearchParams();
-                    params.append('no', vm.no);
-					params.append('pwd', vm.pwd);
+                    params.append('no', this.no);
+					params.append('pwd', this.pwd);
 					axios.post('sys/login',params).then(function(reponse){
-						vm.error=reponse.data.msg;
+						this.error=reponse.data.msg;
                         console.log(reponse);
-                        if(vm.error=="success")
+                        if(this.error=="success")
                         	window.location.href="admin";
                         else
                         	return

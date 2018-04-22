@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js" rel="stylesheet" type="text/css"/>
-		
-		<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/> 
+		<!--<link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js" rel="stylesheet" type="text/css"/>
+		-->
+		<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
 		<link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
 		
 		<style>
@@ -71,6 +71,8 @@
 		                    	<li class="divider"></li>
 		                    	<li><a href="#" v-on:click="jumpTo('returnBook')">归还管理</a></li>
 		                    	<li class="divider"></li>
+								<li><a href="#" v-on:click="jumpTo('redecorateBook')">已借续借</a></li>
+								<li class="divider"></li>
 		                        <li><a href="#" v-on:click="jumpTo('bothlog')">借还日志</a></li>
 		                    </ul>
 		                </li>
@@ -81,7 +83,7 @@
 		                </li>
 		            </ul>
 		            <ul class="nav navbar-nav navbar-right" style="margin-right:1%">
-		                <li id="sys"><a href="login.html"><span class="glyphicon glyphicon-user"></span>&nbsp;{{sysName}}，已登录</a></li>
+		                <li id="sys"><a href="login.html"><span class="glyphicon glyphicon-user"></span>&nbsp;{{sno}}，已登录</a></li>
 		                <li><a href="logout.html"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
 		            </ul>
 		        </div>
@@ -128,7 +130,7 @@
 		new Vue({
 			el:'#sys',
 			data:{
-			    sysName:sessionStorage.getItem("sno")
+
 			}
 		});
 		new Vue({
@@ -136,7 +138,6 @@
 
 			methods:{
 			    jumpTo:function(temp){
-
 					switch (temp){
 						case "allBooks":
 						    window.location.href="adminBothBooks";
@@ -150,11 +151,14 @@
                         case "userAdd":
                             window.location.href="adminUserAdd";
                             break;
-                        case "borrow":
+                        case "borrowBook":
                             window.location.href="adminBorrow";
                             break;
-                        case "return":
+                        case "returnBook":
                             window.location.href="adminReturn";
+                            break;
+                        case "redecorateBook":
+                            window.location.href="redecorateBook";
                             break;
                         case "bothlog":
                             window.location.href="adminBRLog";

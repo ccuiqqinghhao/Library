@@ -27,40 +27,95 @@
 
 
 
-<div id="usersInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
-    <div>
-        <input type="text" class="form-control" placeholder="请输入读者ID" v-model="input">
-        <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
-    </div>
-    <table class="table table-hover table-condensed">
-        <tr>
-            <th>读者ID</th>
-            <th>姓名</th>
-            <th>性别</th>
-            <th>生日</th>
-            <th>联系电话</th>
-            <th>职称</th>
+    <div id="usersInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+        <div>
+            <input type="text" class="form-control" placeholder="请输入读者ID" v-model="input">
+            <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+        </div>
+        <table class="table table-hover table-condensed">
+            <tr>
+                <th>读者ID</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>生日</th>
+                <th>联系电话</th>
+                <th>职称</th>
+                <th>编辑</th>
+                <th>删除</th>
 
-        </tr>
-        <tr v-for="product in products">
-            <td>{{product.uno}}</td>
-            <td>{{product.uname}}</td>
-            <td>{{product.usex}}</td>
-            <td>{{product.ubirth}}</td>
-            <td>{{product.uphone}}</td>
-            <td>{{product.uposition}}</td>
-        </tr>
-    </table>
-</div>
+            </tr>
+            <tr v-for="product in products">
+                <td>{{product.uno}}</td>
+                <td>{{product.uname}}</td>
+                <td>{{product.usex}}</td>
+                <td>{{product.ubirth}}</td>
+                <td>{{product.uphone}}</td>
+                <td>{{product.uposition}}</td>
+                <td><button v-on:click="selectWillUpdate" type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#updateUser">编辑</button></td>
+                <td><button v-on:click="willDelete" type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#isDelete">删除</button></td>
+            </tr>
+        </table>
+    </div>
+
+
+                        <!--提示是否删除-->
+                        <div id="isDelete" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 style="color:#e00;" class="modal-title">警告</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>是否删除{{willDeleteuno}}?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                        <button v-on:click="delete" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--编辑的模态框-->
+                        <div id="updateUser" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" arjia-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">更新用户信息</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-striped">
+                                            <tr><td>读者ID</td><td>{{uno}}</td></tr>
+                                            <tr><td>姓名</td><td><input v-model="uname"></td></tr>
+                                            <tr><td>性别</td><td><input v-model="usex"></td></tr>
+                                            <tr><td>生日</td><td><input v-model="ubirth"></td></tr>
+                                            <tr><td>联系电话</td><td><input v-model="uphone"></td></tr>
+                                            <tr><td>职称</td><td><input v-model="uposition"></td></tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div style="float:left; color:#e00;"><p>{{error}}</p></div>
+                                        <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
+                                        <button v-on:click="checkUpdate" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 </body>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/bootstrap.js" ></script>
 <script type="text/javascript">
 
-
-    new Vue({
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    Vue.prototype.$axios = axios;
+    window.onload=function(){
+        thisPage.select("sys/BothUsers");
+    };
+    var thisPage=new Vue({
         el:'#usersInfo',
         data:{
             input:'',
@@ -85,9 +140,114 @@
                 }).catch(function(error){
                     console.log(error);
                 });
+            },
+            selectWillUpdate:function(event){
+                var willUpdate=event.target.parentNode.parentNode.childNodes[1].textContent;
+                this.$axios.get("sys/selectUser/"+willUpdate).then(function(response){
+                    updateVue.uno=response.data.data[0].uno;
+                    updateVue.uname=response.data.data[0].uname;
+                    updateVue.usex=response.data.data[0].usex;
+                    updateVue.ubirth=response.data.data[0].ubirth;
+                    updateVue.uphone=response.data.data[0].uphone;
+                    updateVue.uposition=response.data.data[0].uposition;
+                }).catch(function(error){
+                    console.log(error);
+                });
+
+            },
+            willDelete:function(event){
+                var willdelete=event.target.parentNode.parentNode.childNodes[1].textContent;
+                deleteVue.uno=willdelete;
             }
 
         }
+    });
+    var updateVue=new Vue({
+        el:"#updateUser",
+        data:{
+            uno:'',
+            uname:'',
+            usex:'',
+            ubirth:'',
+            uphone:'',
+            uposition:'',
+            error:'',
+        },
+        watch:{
+
+            uname:function(){
+                this.checkIsNull();
+            },
+            usex:function(){
+                this.checkIsNull();
+            },
+            ubirth:function(){
+                this.checkIsNull();
+            },
+            uphone:function(){
+                this.checkIsNull();
+            },
+            uposition:function(){
+                this.checkIsNull();
+            },
+
+        },
+        methods:{
+            checkIsNull:_.debounce(
+                function(){
+                    if(this.uname==''||
+                        this.usex==''||
+                        this.ubirth==''||
+                        this.uphone==''||
+                        this.uposition==''){
+                        this.error='不能为空';
+                        return
+                    }
+                    this.error='';
+                },100
+            ),
+            checkUpdate:function(){
+                if(this.error==''){
+                    var params = new URLSearchParams();
+                    params.append('uno',this.uno);
+                    params.append('uname', this.uname);
+                    params.append('usex', this.usex);
+                    params.append('ubirth', this.ubirth);
+                    params.append('uphone', this.uphone);
+                    params.append('uposition', this.uposition);
+
+                    axios.post("sys/updateUser",params).then(function(response){
+                        thisPage.checkInput();
+                        alert(response.data.msg);
+
+                    }).catch(function (error) {
+                        console.info(error);
+                    })
+
+                }
+
+            },
+        },
+    });
+    var deleteVue=new Vue({
+        el:"#isDelete",
+        data:{
+            uno:'',
+        },
+        methods:{
+            delete:function(){
+                var params = new URLSearchParams();
+                params.append('uno',this.uno);
+                this.$axios.post("sys/deleteUser",params).then(function(response){
+                    console.info(response);
+                    thisPage.checkInput();
+                    alert(response.data.msg);
+                }).catch(function (error) {
+                    console.info(error);
+                })
+
+            },
+        },
     });
 </script>
 </html>

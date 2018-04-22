@@ -39,12 +39,19 @@ public class SysService {
 
         if(sys==null)
             throw new RuntimeException("用户名或密码错误");
+        System.out.println(Const.SYS_OBJECT);
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
-        
+
         return ResultUtil.success();
     }
 
-
+    /**
+     * 查询所有图书
+     * @return
+     */
+    public ResultEntity selectBothBooks(){
+        return ResultUtil.success(sysMapper.selectBothBooks());
+    }
     /**
      * 根据Bname查询图书
      * @param book
@@ -62,9 +69,31 @@ public class SysService {
      */
     public ResultEntity selectBookByClassifyNo(Book book){
         logger.info("开始根据ClassifyNo查询图书");
-        return ResultUtil.success(sysMapper.selectBookByClassifyNo(book));
+
+        List<Book> l=null;
+        if((l=sysMapper.selectBookByClassifyNo(book)).isEmpty())
+            throw new RuntimeException("找不到该图书或该图书已被删除");
+        else
+            return ResultUtil.success(l);
     }
 
+    /**
+     * 查询所有已借未还
+     * @return
+     */
+    public ResultEntity selectBothUserBook(){
+        logger.info("开始查询所有已借未还的信息");
+        return ResultUtil.success(sysMapper.selectBothUserBook());
+    }
+    /**
+     * 查询某一用户已借未还图书
+     * @param user
+     * @return
+     */
+    public ResultEntity selectUserBook(User user){
+        logger.info("开始查询某用户已借未还的信息");
+        return ResultUtil.success(sysMapper.selectUserBook(user));
+    }
     /**
      * 更新图书信息
      * @param book
@@ -84,10 +113,12 @@ public class SysService {
      */
     public ResultEntity deleteBook(Book book){
         logger.info("开始删除图书");
-        if(sysMapper.deleteBook(book)==null)
-            throw new RuntimeException("删除图书失败");
+        book=sysMapper.selectBookByClassifyNo(book).get(0);
+        if(book.getBborrowedNum()!=0)
+            throw new RuntimeException("图书未全部归还,无法删除");
+        if(sysMapper.deleteBook(book)!=1)
+            throw new RuntimeException("删除失败");
         return ResultUtil.success();
-
     }
 
     /**
@@ -127,6 +158,8 @@ public class SysService {
      * @throws Exception
      */
     public ResultEntity deleteUser(User user)throws Exception{
+        if(sysMapper.selectUserNotReturn(user).size()!=0)
+            throw new RuntimeException("该用户还有图书未归还,无法删除");
         logger.info("开始删除用户");
         if(sysMapper.deleteUser(user)==1)
             return ResultUtil.success();
@@ -141,7 +174,7 @@ public class SysService {
         logger.info("开始根据Uno查询User");
         List<User> l=null;
         if((l=sysMapper.selectUserByUno(user)).isEmpty())
-            throw new RuntimeException("找不到该用户");
+            throw new RuntimeException("找不到该用户或该用户已被删除");
         else
             return ResultUtil.success(l);
     }
@@ -164,13 +197,13 @@ public class SysService {
      */
     public ResultEntity insertUser(User user){
         logger.info("开始添加用户");
-        if(sysMapper.selectUserByUno(user)==null){
-            if(sysMapper.insertUser(user)==1)
-                return ResultUtil.success();
-            throw new RuntimeException("添加用户失败");
-        }else{
+        if(sysMapper.selectUserByUno(user).size()!=0)
             throw new RuntimeException("该用户id已存在");
-        }
+        if(sysMapper.insertUser(user)==1)
+            return ResultUtil.success();
+
+        throw new RuntimeException("添加用户失败");
+
 
     }
 
@@ -185,8 +218,10 @@ public class SysService {
         logger.info(user.toString()+"  "+book.toString());
         if(sysMapper.selectUserByUno(user).size()==0)
             throw new RuntimeException("找不到该用户");
-        if(sysMapper.selectBookByClassifyNo(book)==null)
+        List<Book> l=sysMapper.selectBookByClassifyNo(book);
+        if(l.size()==0)
             throw new RuntimeException("找不到图书信息");
+        book=l.get(0);
         if(sysMapper.selectIsBorrowedThisBook(user.getUno(),book.getClassifyNo())==1)
             throw new RuntimeException("同样的书只可以借一本哦");
         if(book.getBborrowedNum()>=book.getBtotalNum())
@@ -195,6 +230,7 @@ public class SysService {
             if(sysMapper.updateBookBorrowedNumWhenBorrow(book)==1&&
                     sysMapper.insertRdeleted(user.getUno(),book.getClassifyNo())==1)
                 return ResultUtil.success();
+
         throw new RuntimeException("借阅失败");
     }
 
@@ -241,5 +277,14 @@ public class SysService {
      */
     public ResultEntity selectBothLog(){
         return ResultUtil.success(sysMapper.selectBothLog());
+    }
+
+    /**
+     * 查询指定用户的借阅日志
+     * @param user
+     * @return
+     */
+    public ResultEntity selectUserLog(User user){
+        return ResultUtil.success(sysMapper.selectUserLog(user));
     }
 }

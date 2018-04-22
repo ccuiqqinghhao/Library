@@ -128,14 +128,9 @@
                 params.append('uposition', vm.UPosition);
 
                 axios.post('sys/insertUser',params).then(function(reponse){
-                    if(reponse.data.msg!="success"){
-                        vm.error=reponse.data.msg;
-                        return
-                    }
-                    alert("添加成功");
-                    window.location.href="admin";
+                    alert(reponse.data.msg);
                 }).catch(function(error){
-                    console.log(error);
+                    //console.log(error);
                 });
             }
 

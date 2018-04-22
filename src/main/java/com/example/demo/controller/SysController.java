@@ -6,6 +6,7 @@ import com.example.demo.entity.ResultEntity;
 import com.example.demo.entity.User;
 import com.example.demo.service.SysService;
 
+import com.example.demo.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class SysController {
      * @param uno
      * @return
      */
-    @GetMapping(value="/selectUser/{Uno}")
-    public ResultEntity sysSelectUserByUno(@PathVariable("Uno")String uno){
+    @GetMapping(value="/selectUser/{uno}")
+    public ResultEntity sysSelectUserByUno(@PathVariable("uno")String uno){
         User user=new User();
         user.setUno(uno);
         return sysService.selectUserByUno(user);
@@ -46,13 +47,13 @@ public class SysController {
      * @param uposition
      * @return
      */
-    @PostMapping(value="/updateUser/{Uno}")
-    public ResultEntity updateUser(@PathVariable("Uno") String uno,
-                                   @RequestParam("Uname") String uname,
-                                   @RequestParam("Usex") String usex,
-                                   @RequestParam("Ubirth") String ubirth,
-                                   @RequestParam("Uphone")String uphone,
-                                   @RequestParam("Uposition")String uposition){
+    @PostMapping(value="/updateUser")
+    public ResultEntity updateUser(@RequestParam("uno") String uno,
+                                   @RequestParam("uname") String uname,
+                                   @RequestParam("usex") String usex,
+                                   @RequestParam("ubirth") String ubirth,
+                                   @RequestParam("uphone")String uphone,
+                                   @RequestParam("uposition")String uposition){
         User user =new User();
         user.setUno(uno);
         user.setUname(uname);
@@ -73,14 +74,28 @@ public class SysController {
     public ResultEntity insertUser(@Valid User user){
         return sysService.insertUser(user);
     }
-    @PostMapping(value="/deleteUser/{uno}")
-    public ResultEntity deleteUser(@PathVariable("uno") String uno) throws Exception{
+
+    /**
+     * 删除用户
+     * @param uno
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value="/deleteUser")
+    public ResultEntity deleteUser(@RequestParam("uno") String uno) throws Exception{
         User user =new User();
         user.setUno(uno);
         return sysService.deleteUser(user);
     }
 
-
+    /**
+     * 查询所有图书
+     * @return
+     */
+    @GetMapping(value="/selectBothBooks")
+    public ResultEntity selectBothBooks(){
+        return sysService.selectBothBooks();
+    }
 
     /**
      * 根据图书名模糊查询
@@ -166,8 +181,8 @@ public class SysController {
      * @return
      */
     @PostMapping(value="/borrowBook")
-    public ResultEntity borrowBook(@RequestParam("Uno")String uno,
-                                   @RequestParam("ClassifyNo")String classifyNo){
+    public ResultEntity borrowBook(@RequestParam("uno")String uno,
+                                   @RequestParam("classifyNo")String classifyNo){
         User user=new User();
         user.setUno(uno);
         Book book=new Book();
@@ -176,14 +191,33 @@ public class SysController {
     }
 
     /**
+     * 查询所有已借未还
+     * @return
+     */
+    @GetMapping(value="/selectBothUserBook")
+    public ResultEntity selectBothUserBook(){
+        return sysService.selectBothUserBook();
+    }
+    /**
+     * 查询某一用户已借未还
+     * @param uno
+     * @return
+     */
+    @GetMapping(value="/selectUserBook/{uno}")
+    public ResultEntity selectUserBook(@PathVariable("uno")String uno){
+        User user=new User();
+        user.setUno(uno);
+        return sysService.selectUserBook(user);
+    }
+    /**
      * 图书归还
      * @param uno
      * @param classifyNo
      * @return
      */
     @PostMapping(value="/returnBook")
-    public ResultEntity returnBook(@RequestParam("Uno")String uno,
-                                   @RequestParam("ClassifyNo")String classifyNo){
+    public ResultEntity returnBook(@RequestParam("uno")String uno,
+                                   @RequestParam("classifyNo")String classifyNo){
         User user=new User();
         user.setUno(uno);
         Book book=new Book();
@@ -198,8 +232,8 @@ public class SysController {
      * @return
      */
     @PostMapping(value="/redecorateBook")
-    public ResultEntity redecorateBook(@RequestParam("Uno")String uno,
-                                       @RequestParam("ClassifyNo")String classifyNo){
+    public ResultEntity redecorateBook(@RequestParam("uno")String uno,
+                                       @RequestParam("classifyNo")String classifyNo){
         User user=new User();
         Book book=new Book();
         user.setUno(uno);
@@ -214,5 +248,17 @@ public class SysController {
     @GetMapping("/bothLog")
     public ResultEntity selectBothLog(){
         return sysService.selectBothLog();
+    }
+
+    /**
+     * 查询指定用户的借阅记录
+     * @param uno
+     * @return
+     */
+    @GetMapping("/userLog/{uno}")
+    public ResultEntity selecrUserLog(@PathVariable("uno")String uno){
+        User user=new User();
+        user.setUno(uno);
+        return sysService.selectUserLog(user);
     }
 }

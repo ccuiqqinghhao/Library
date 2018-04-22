@@ -19,7 +19,7 @@ public class LoginAndRegisterController {
     @ResponseBody
     @PostMapping(value="/sys/login")
     public ResultEntity sysLogin( @RequestParam String no,
-                                  @RequestParam String pwd, @SessionAttribute HttpSession httpSession){
+                                  @RequestParam String pwd, HttpSession httpSession){
        Sys sys=new Sys();
        sys.setSno(no);
        sys.setSpwd(pwd);

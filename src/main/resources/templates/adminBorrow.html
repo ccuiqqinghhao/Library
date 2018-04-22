@@ -27,17 +27,16 @@
 
 
 
-<div id="bookInfo" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
+<div id="Info" style="position: relative;top: 10%;width: 80%;margin-left: 10%">
 	<div class="form-group">
 		<label>图书编号</label>
-		<input type="text" class="form-control" placeholder="请输入图书编号" v-model="ClassifyNo">
+		<input type="text" class="form-control" placeholder="请输入图书编号" v-model="classifyNo">
 	</div>
-
 	<div class="form-group">
 		<label>读者ID</label>
-		<input type="text" class="form-control" placeholder="请输入读者ID" v-model="Uno">
+		<input type="text" class="form-control" placeholder="请输入读者ID" v-model="uno">
 	</div>
-	<button v-on:click="checkAdd" type="button" class="btn btn-Default form-control">添加</button>
+	<button v-on:click="checkInput" type="button" class="btn btn-Default form-control">借阅</button>
 	<small  class="adminLogin_middle-form-text-error">{{error}}</small>
 </div>
 </body>
@@ -50,52 +49,46 @@
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     Vue.prototype.$axios = axios;
     new Vue({
-        el:'#bookInfo',
+        el:'#Info',
         data:{
-            ClassifyNo:'',
-            Uno:'',
+            classifyNo:'',
+            uno:'',
             error:'不能为空',
         },
         watch:{
-            ClassifyNo:function(){
+            classifyNo:function(){
                 this.checkIsNull();
             },
-			Uno:function(){
+			uno:function(){
 				this.checkIsNull();
 			}
         },
         methods:{
             checkIsNull:_.debounce(
                 function(){
-                    if(this.ClassifyNo==''||
-                        this.Uno==''){
+                    if(this.classifyNo==''||
+                        this.uno==''){
                         this.error='不能为空';
                         return
                     }
                     this.error='';
                 },100
             ),
-            checkAdd:function(){
-                if(this.error==''&&this.Uno!=''&&this.ClassifyNo!='')
-                    this.add();
-            },
-            add:function(){
-                var vm=this;
-                var params = new URLSearchParams();
-                params.append('classifyNo', vm.ClassifyNo);
-                params.append('uno', vm.Uno);
+            checkInput:function(){
+                if(this.error==''){
+                    var params = new URLSearchParams();
+                    params.append('classifyNo', this.classifyNo);
+                    params.append('uno', this.uno);
+                    this.$axios.post('sys/borrowBook',params).then(function(response){
+                        alert(response.data.msg);
+                        /*window.location.href="admin";*/
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+				}
 
-                axios.post('sys/borrowBook',params).then(function(reponse){
-                    if(reponse.data.msg!="success"){
-                        vm.error=reponse.data.msg;
-                        return
-                    }
-                    alert("借阅成功");
-                    window.location.href="admin";
-                }).catch(function(error){
-                    console.log(error);
-                });
-            }
+            },
+
 
         }
     });

@@ -147,12 +147,7 @@
                     params.append('btype', vm.Btype);
                     params.append('btotalNum', vm.BtotalNum);
                     axios.post('sys/insertBook',params).then(function(response){
-                        if(response.data.msg!="success"){
-                            vm.error=reponse.data.msg;
-                            return
-                        }
-                        alert("添加成功");
-                        window.location.href="admin";
+                        alert(response.data.msg);
                     }).catch(function(error){
                         console.log(error);
                     });

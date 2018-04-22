@@ -45,4 +45,8 @@ public class PageController {
     public String adminReturn(){
         return "adminReturn";
     }
+    @RequestMapping("/redecorateBook")
+    public String redecorateBook(){
+        return "adminRedecorateBook";
+    }
 }

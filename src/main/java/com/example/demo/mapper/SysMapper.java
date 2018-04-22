@@ -61,6 +61,12 @@ public interface SysMapper {
 
 
     /**
+     * 查询所有图书
+     * @return
+     */
+    @Select("select * from book")
+    List<Book> selectBothBooks();
+    /**
      * 管理员检索图书
      * 模糊查询
      * @param book
@@ -90,7 +96,7 @@ public interface SysMapper {
      * @param book
      */
     @Delete("delete from book where ClassifyNo=#{classifyNo}")
-    Book deleteBook(Book book);
+    Integer deleteBook(Book book);
 
 
     /**
@@ -109,6 +115,19 @@ public interface SysMapper {
     @Update("update book set BtotalNum=BtotalNum+1 where ClassifyNo=#{classifyNo}")
     Integer updateBookTotalNum(Book book);
 
+    /**
+     * 查询所有已借未还
+     * @return
+     */
+    @Select("select * from userbook")
+    List<Log> selectBothUserBook();
+    /**
+     * 查询指定用户已借未还的图书
+     * @param user
+     * @return
+     */
+    @Select("select * from userbook where uno=#{uno}")
+    List<Log> selectUserBook(User user);
 
     /**图书借阅部分开始**/
 
@@ -138,12 +157,12 @@ public interface SysMapper {
     Integer updateBookBorrowedNumWhenBorrow(Book book);
 
     /**
-     *更新rdeleted表格
+     *更新log表格
      * @param uno
      * @param classifyNo
      * @return
      */
-    @Insert("insert into rdeleted (Uno,ClassifyNo,UBorrowDate)values(#{uno},#{classifyNo},sysDate())")
+    @Insert("insert into log (Uno,ClassifyNo,UBorrowDate)values(#{uno},#{classifyNo},sysDate())")
     Integer insertRdeleted(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
 
     /**图书借阅部分结束**/
@@ -177,7 +196,7 @@ public interface SysMapper {
      * @param classifyNo
      * @return
      */
-    @Update("update rdeleted set UReborrowTimes=UReborrowTimes+1 where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
+    @Update("update log set UReborrowTimes=UReborrowTimes+1 where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
     Integer updateRdeletedUReborrowTimes(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
     /**续借操作结束**/
 
@@ -191,7 +210,7 @@ public interface SysMapper {
      * @param classifyNo
      * @return
      */
-    @Update("update rdeleted set ReturnDate=sysDate() where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
+    @Update("update log set ReturnDate=sysDate() where Uno=#{uno} and ClassifyNo=#{classifyNo} and ReturnDate is null")
     Integer updateRdeletedReturnTime(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
 
     /**
@@ -212,8 +231,27 @@ public interface SysMapper {
     Integer deleteUserBook(@Param("uno") String uno, @Param("classifyNo") String classifyNo);
     /**图书归还部分结束*/
 
-    //todo 添加一个查询所有日志的接口
 
-    @Select("select * from rdeleted")
+
+    /**
+     * 查询指定用户的借阅日志
+     * @param user
+     * @return
+     */
+    @Select("select * from log where uno=#{uno}")
+    List<Log> selectUserLog(User user);
+    /**
+     * 查询所有日志
+     * @return
+     */
+    @Select("select * from log")
     List<Log> selectBothLog();
+
+    /**
+     * 查询指定用户未还的图书信息
+     * @param user
+     * @return
+     */
+    @Select("select * from userbook where uno=#{uno}")
+    List<Log> selectUserNotReturn(User user);
 }
