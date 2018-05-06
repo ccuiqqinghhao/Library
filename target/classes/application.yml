@@ -1,0 +1,36 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /Library
+
+mybatis:
+  type-aliases-package: com.example.demo.mapper
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/library?useAffectedRows=true&characterEncoding=utf-8&useSSL=true
+    username: root
+    password: root
+  thymeleaf:
+    prefix:classpath: /static/**
+    check-template: true
+    suffix: .html
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    mode: HTML5
+    cache: false
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,201 @@
+<html>
+	<head>
+		<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+		<!--<link href="css/admin.css" rel="stylesheet" type="text/css"/>-->
+		<title>登录</title>
+		<style>
+            body{
+                margin:0px;
+                padding:0px;
+            }
+			.adminLogin_top {
+				width:100%;
+				height:70px;
+
+			}
+			.adminLogin_top-title {
+				position:relative;
+				top:5px;
+				font:400 50px/55px "microsoft yahei";
+				color:rgba(0,0,0,0.5);
+			}
+            #myCarousel{
+                margin-left: 2%;
+                width: 60%;
+                height: 70%;
+                float: left;
+                z-index: 999;
+                display: inline;
+            }
+			.adminLogin_middle {
+                display:inline-block;
+                margin-right:200px;
+                margin-top:100px;
+				float:right;
+				width:350px;
+				height:290px;
+				top:40%;
+				border-radius: 10px;
+			}
+
+			.adminLogin_middle-form {
+				margin:20px;
+				color:rgba(0,0,0,0.5);
+			}
+			.adminLogin_middle-form-text {
+				color:rgba(0,0,0,0.5);
+                font:400 20px/20px "microsoft yahei";
+			}
+			.adminLogin_middle-form-text-bigger {
+				font:400 25px/25px "microsoft yahei";
+			}
+			.adminLogin_middle-form-text-error {
+				color:#e00;
+			}
+		</style>
+
+	</head>
+	<body>
+		<div class="adminLogin_top">
+			<p class="adminLogin_top-title adminLogin_text-left">&nbsp;图书馆</p>
+
+		</div>
+
+
+
+        <div id="myCarousel" class="carousel slide">
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="images/11.jpg" alt="第一张">
+                </div>
+                <div class="item">
+                    <img src="images/22.jpg" alt="第二张">
+                </div>
+                <div class="item">
+                    <img src="images/33.jpg" alt="第三张">
+                </div>
+
+            </div>
+            <a class="carousel-control left" href="#myCarousel"
+               data-slide="prev">&lsaquo;
+            </a>
+            <a class="carousel-control right" href="#myCarousel"
+               data-slide="next">&rsaquo;
+            </a>
+        </div>
+		<div class="adminLogin_middle">
+
+			<form id="loginform">
+				<div class="form-group adminLogin_middle-form">
+					<br>
+					<p class="adminLogin_middle-form-text adminLogin_middle-form-text-bigger">欢迎使用图书管理系统</p>
+					<p class="adminLogin_middle-form-text ">请输入您的用户名和密码进行登录</p>
+                    <small>&nbsp;</small>
+                    <p>用户名&nbsp;</p>
+					<input v-model='no' type="text" id="Aid" class="form-control" placeholder="在此输入账号">
+                    <p>密码&nbsp;</p>
+                    <input v-model='pwd' type="password" id="Apwd" class="form-control" placeholder="在此输入密码">
+                    <small>&nbsp;</small>
+
+                        <input type="radio" id="user" value="user" v-model="role" checked="true">
+                        读者
+                        <input type="radio" id="sys" value="sys" v-model="role">
+                        管理员
+
+                    <small>&nbsp;</small>
+					<button v-on:click="checklogin" id="loginButton" type="button" class="btn btn-Default form-control" data-loading-text="登录中...">登录</button>
+					<small  class="adminLogin_middle-form-text-error">{{error}}</small>
+
+					
+				</div>
+			</form>
+		</div>
+	</body>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+    <script src="js/backgroundstyle.js" ></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        Vue.prototype.$axios = axios;
+
+
+		var message=new Vue({
+			el:'#loginform',
+			data:{
+				no:'',
+				pwd:'',
+				role:'user',
+				error:'用户名或密码不能为空',
+			},
+			watch:{
+				no:function(){
+					this.checkIsNull();	
+				},
+				pwd:function(){
+					this.checkIsNull();	
+				},
+				role:function(){
+				    this.checkIsNull();
+				}
+			},
+			methods:{
+				checkIsNull:_.debounce(
+					function(){
+						if(this.no==''||this.pwd==''){
+							this.error='用户名或密码不能为空';
+							return
+						}
+						this.error='';
+					},100
+				),
+				/*登录实现*/
+
+				checklogin:function(){
+					if(this.error==''&&this.no!=''&&this.pwd!='')
+					    if(this.role=='sys')
+							this.adminLogin();
+						else if(this.role=='user')
+						    this.userLogin();
+				},
+				adminLogin:function(){
+                    var params = new URLSearchParams();
+                    params.append('no', this.no);
+					params.append('pwd', this.pwd);
+					axios.post("sys/login",params).then(function(response){
+						message.error=response.data.msg;
+                        console.log(message.error);
+                        if(response.data.msg=="success"){
+							window.location.href="admin";
+						}
+					}).catch(function(error){
+                        console.log(error);
+                    });
+				},
+                userLogin:function(){
+                    var params = new URLSearchParams();
+                    params.append('no', this.no);
+                    params.append('pwd', this.pwd);
+                    axios.post("user/login",params).then(function(response){
+                        message.error=response.data.msg;
+                        console.log(message.error);
+                        if(response.data.msg=="success"){
+                            window.location.href="user";
+                        }
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                }
+			}
+		});
+
+	</script>
+
+</html>

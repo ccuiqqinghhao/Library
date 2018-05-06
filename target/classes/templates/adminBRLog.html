@@ -1,0 +1,324 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>借阅日志</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: #888;
+            line-height: 30px;
+            /*text-align: center;*/
+        }
+        a, a:hover, a:focus {
+            text-decoration: none;
+        }
+        a {
+            /*text-decoration: none;*/
+            color:#777;
+        }
+    </style>
+</head>
+<body>
+<nav style="z-index: 999;width: 100%;background-color: #fff" class="navbar navbar-default" role="navigation" >
+    <div class="container-fluid">
+        <div class="navbar-header" style="margin-left: 8%;margin-right: 1%">
+            <a class="navbar-brand" href="admin">图书管理系统</a>
+        </div>
+        <div id="title" class="collapse navbar-collapse" >
+            <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown">
+                    <a href="#" id="books" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        图书管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="books">
+                        <li><a href="#" v-on:click="jumpTo('allBooks')">全部图书</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" v-on:click="jumpTo('bookAdd')">增加图书</a></li>
+
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        读者管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" v-on:click="jumpTo('allUsers')">全部读者</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" v-on:click="jumpTo('userAdd')">增加读者</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        借还管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" v-on:click="jumpTo('borrowBook')">借阅管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" v-on:click="jumpTo('returnBook')">归还管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" v-on:click="jumpTo('redecorateBook')">已借续借</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" v-on:click="jumpTo('bothlog')">借还日志</a></li>
+                    </ul>
+                </li>
+                <li >
+                    <a href="#" v-on:click="jumpTo('updatePwd')">
+                        密码修改
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" style="margin-right:1%">
+                <li id="sys"><a href="login.html"><span class="glyphicon glyphicon-user"></span>&nbsp;已登录</a></li>
+                <li><a href="#" v-on:click="jumpTo('exit')"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <div id="bRInfo" style="position: relative;width: 80%;margin-left: 10%">
+
+        <div>
+            <input type="text" class="form-control" placeholder="输入用户ID可查询该用户借阅记录" v-model="input">
+            <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
+        </div>
+        <table class="table table-hover table-condensed">
+            <tr>
+                <th>#</th>
+                <th>读者ID</th>
+                <th>图书编号</th>
+                <th>借阅日期</th>
+                <th>续借次数</th>
+                <th>归还日期</th>
+
+            </tr>
+            <tr v-for="product in products">
+
+                <td>{{product.id}}</td>
+                <td><a v-on:click=selectUser data-toggle="modal" data-target="#userModal">{{product.uno}}</a></td>
+                <td><a v-on:click=selectBook data-toggle="modal" data-target="#bookModal">{{product.classifyNo}}</a></td>
+                <td>{{product.uBorrowDate}}</td>
+                <td>{{product.uReborrowTimes}}</td>
+                <td>{{product.returnDate}}</td>
+
+            </tr>
+        </table>
+
+    </div>
+        <!--读者详情modal-->
+        <div class="modal fade bs-example-modal-lg" id="userModal" tabindex="-1" role="dialog" aria-labelledby=""myModalLabel aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">读者详情</h4>
+                </div>
+                <div id="userInfo">
+                    <table class="table table-striped">
+                        <tr><td>读者ID</td><td>{{product.uno}}</td></tr>
+                        <tr><td>姓名</td><td>{{product.uname}}</td></tr>
+                        <tr><td>性别</td><td>{{product.usex}}</td></tr>
+                        <tr><td>生日</td><td>{{product.ubirth}}</td></tr>
+                        <tr><td>联系方式</td><td>{{product.uphone}}</td></tr>
+                        <tr><td>职称</td><td>{{product.uposition}}</td></tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+        <!--图书详情modal-->
+        <div class="modal fade bs-example-modal-lg" id="bookModal" tabindex="-1" role="dialog" aria-labelledby=""myModalLabel aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">图书详情</h4>
+                    </div>
+                    <div id="bookInfo">
+                        <table class="table table-striped">
+                            <tr><td>图书编号</td><td>{{product.classifyNo}}</td></tr>
+                            <tr><td>图书名称</td><td>{{product.bname}}</td></tr>
+                            <tr><td>作者</td><td>{{product.bwriter}}</td></tr>
+                            <tr><td>出版社</td><td>{{product.bpubAdr}}</td></tr>
+                            <tr><td>出版日期</td><td>{{product.bpubDate}}</td></tr>
+                            <tr><td>价格</td><td>{{product.bprice}}</td></tr>
+                            <tr><td>类别</td><td>{{product.btype}}</td></tr>
+                            <tr> <td>总数量</td><td>{{product.btotalNum}}</td></tr>
+                            <tr><td>借出数量</td><td>{{product.bborrowedNum}}</td></tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+</body>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/bootstrap.js" ></script>
+<script src="js/backgroundstyle.js" ></script>
+<script type="text/javascript">
+
+    window.onload=function(){
+        selectLog.select("sys/bothLog");
+    };
+
+    new Vue({
+        el:'#sys',
+        data:{
+
+        }
+    });
+    var pagehead=new Vue({
+        el:'#title',
+
+        methods:{
+            jumpTo:function(temp){
+                switch (temp){
+                    case "allBooks":
+                        window.location.href="adminBothBooks";
+                        break;
+                    case "bookAdd":
+                        window.location.href="adminBookAdd";
+                        break;
+                    case "allUsers":
+                        window.location.href="adminBothUsers";
+                        break;
+                    case "userAdd":
+                        window.location.href="adminUserAdd";
+                        break;
+                    case "borrowBook":
+                        window.location.href="adminBorrow";
+                        break;
+                    case "returnBook":
+                        window.location.href="adminReturn";
+                        break;
+                    case "redecorateBook":
+                        window.location.href="adminredecorateBook";
+                        break;
+                    case "bothlog":
+                        window.location.href="adminadminBRLog";
+                        break;
+                    case "updatePwd":
+                        window.location.href="adminupdatePwd";
+                        break;
+                    case "exit":
+                        this.exit();
+                        break;
+                }
+            },
+            exit:function(){
+                axios.post('exit').then(function(reponse){
+                    window.location.href="admin";
+                }).catch(function(error){
+                    //console.log(error);
+                });
+            }
+        }
+    });
+
+
+    var selectLog =new Vue({
+        el:'#bRInfo',
+        data:{
+            products:'',
+            input:'',
+        },
+        methods:{
+            selectUser:function(event){
+                user.selectUser(event.target.text);
+            },
+            selectBook:function(event){
+                book.selectBook(event.target.text);
+            },
+            checkInput:function(){
+                if(this.input==='')
+                    selectLog.select("sys/bothLog");
+                else
+                    this.select("sys/userLog/"+this.input);
+            },
+            select:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
+                        vm.error=response.data.msg;
+                        return;
+                    }
+                    vm.products=response.data.data;
+                }).catch(function(error){
+                    console.log(error);
+                });
+            }
+        }
+    });
+    //modal的Vue
+    var user=new Vue({
+        el:"#userInfo",
+        data:{
+            product:'',
+        },
+        methods:{
+            selectUser:function(input){
+                url="sys/selectUser/"+input;
+                this.selectUserNow(url);
+            },
+            selectUserNow:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
+                        vm.product="";
+                        alert(response.data.msg);
+                    }
+                    vm.product=response.data.data[0];
+                }).catch(function(error){
+                    //console.log(error);
+                });
+            }
+        }
+
+    });
+    var book=new Vue({
+        el:"#bookModal",
+        data:{
+            product:'',
+        },
+        methods:{
+            selectBook:function(input){
+                url="sys/selectBookByClassifyNo/"+input;
+                this.selectBookNow(url);
+            },
+            selectBookNow:function(url){
+                var vm=this;
+                axios.get(url).then(function(response){
+                    if(response.data.msg!="success"){
+                        alert(response.data.msg);
+                        vm.product="";
+                    }
+                    vm.product=response.data.data[0];
+                }).catch(function(error){
+                    //console.log(error);
+                });
+            }
+        }
+
+    });
+</script>
+</html>
