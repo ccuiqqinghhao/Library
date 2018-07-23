@@ -40,11 +40,43 @@ public class SysService {
         if(sys==null)
             throw new RuntimeException("用户名或密码错误");
         System.out.println(Const.SYS_OBJECT);
+        sys.setSpwd("");
         httpSession.setAttribute(Const.SYS_OBJECT,sys);
+        httpSession.setAttribute("sno",sys.getSno());
+        //httpSession.setAttribute(Const.SYS_OBJECT,sys);
 
         return ResultUtil.success();
     }
 
+    /**
+     * 管理员修改密码逻辑
+     * @param sys
+     * @param httpSession
+     * @return
+     */
+    public ResultEntity updateSyspwd(Sys sys,String npwd,HttpSession httpSession){
+        //todo
+        sys.setSno(httpSession.getAttribute("sno")+"");
+        sys=sysMapper.login(sys);
+        if(sys==null)
+            throw new RuntimeException("输入的原密码不正确");
+        sys.setSpwd(npwd);
+        if(sysMapper.updateSyspwd(sys)==1){
+            clearSession(httpSession);
+            return ResultUtil.success();
+        }
+        throw new RuntimeException("未知原因修改失败");
+    }
+
+    /**
+     * 清空session
+     * @param httpSession
+     * @return
+     */
+    public ResultEntity clearSession(HttpSession httpSession){
+        httpSession.invalidate();
+        return ResultUtil.success();
+    }
     /**
      * 查询所有图书
      * @return
@@ -127,7 +159,7 @@ public class SysService {
      * @return
      */
     public ResultEntity insertBook(Book book){
-        if(sysMapper.selectBookByClassifyNo(book)==null){//不存在
+        if(sysMapper.selectBookByClassifyNo(book).size()==0){//不存在
             if(sysMapper.insertBook(book)==1)//添加成功
                 return ResultUtil.success();
             else
@@ -286,5 +318,14 @@ public class SysService {
      */
     public ResultEntity selectUserLog(User user){
         return ResultUtil.success(sysMapper.selectUserLog(user));
+    }
+
+    /**
+     * 查询指定用户已借未还的日志
+     * @param user
+     * @return
+     */
+    public ResultEntity selectUserNotReturn(User user){
+        return ResultUtil.success(sysMapper.selectUserNotReturn(user));
     }
 }

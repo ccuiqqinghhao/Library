@@ -27,57 +27,41 @@
 <nav style="z-index: 999;width: 100%;background-color: #fff" class="navbar navbar-default" role="navigation" >
     <div class="container-fluid">
         <div class="navbar-header" style="margin-left: 8%;margin-right: 1%">
-            <a class="navbar-brand" href="admin">图书管理系统</a>
+            <a class="navbar-brand" href="user">我的图书馆</a>
         </div>
         <div id="title" class="collapse navbar-collapse" >
             <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <a href="userBothBooks">
+                        图书查询
+                    </a>
+                </li>
+                <li>
+                    <a href="userInfo">
+                        个人信息
+                    </a>
+                </li>
                 <li class="dropdown">
-                    <a href="#" id="books" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        图书管理
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        我的借阅
                         <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="books">
-                        <li><a href="#" v-on:click="jumpTo('allBooks')">全部图书</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" v-on:click="jumpTo('bookAdd')">增加图书</a></li>
+                    <ul class="dropdown-menu">
 
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        读者管理
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" v-on:click="jumpTo('allUsers')">全部读者</a></li>
+                        <li><a href="userBR">已借续借</a></li>
                         <li class="divider"></li>
-                        <li><a href="#" v-on:click="jumpTo('userAdd')">增加读者</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        借还管理
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" v-on:click="jumpTo('borrowBook')">借阅管理</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" v-on:click="jumpTo('returnBook')">归还管理</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" v-on:click="jumpTo('redecorateBook')">已借续借</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" v-on:click="jumpTo('bothlog')">借还日志</a></li>
+                        <li><a href="userBothBRLog">借还日志</a></li>
                     </ul>
                 </li>
                 <li >
-                    <a href="#" v-on:click="jumpTo('updatePwd')">
+                    <a href="userUpdatePwd">
                         密码修改
                     </a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" style="margin-right:1%">
-                <li id="sys"><a href="login.html"><span class="glyphicon glyphicon-user"></span>&nbsp;已登录</a></li>
-                <li><a href="#" v-on:click="jumpTo('exit')"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
+                <li id="sys"><a href="user"><span class="glyphicon glyphicon-user"></span>&nbsp;已登录</a></li>
+                <li><a href="#" v-on:click="exit"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
             </ul>
         </div>
     </div>
@@ -85,10 +69,7 @@
 
 <div id="bRInfo" style="position: relative;width: 80%;margin-left: 10%">
 
-    <div>
-        <input type="text" class="form-control" placeholder="输入用户ID查询该用户已借未还的图书" v-model="input">
-        <button v-on:click="checkInput" type="button" class="btn btn-Default form-control">查询</button>
-    </div>
+
     <table class="table table-hover table-condensed">
         <tr>
             <th>#</th>
@@ -96,10 +77,7 @@
             <th>图书编号</th>
             <th>借阅日期</th>
             <th>续借次数</th>
-            <th>应还日期</th>
-            <th>续借</th>
-            <th>归还</th>
-
+            <th>归还日期</th>
         </tr>
         <tr v-for="product in products">
 
@@ -108,9 +86,7 @@
             <td><a v-on:click=selectBook data-toggle="modal" data-target="#bookModal">{{product.classifyNo}}</a></td>
             <td>{{product.uBorrowDate}}</td>
             <td>{{product.uReborrowTimes}}</td>
-            <td>{{product.uExpectedReturnDate}}</td>
-            <td><button v-on:click=operatingBook type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#isOperating">续借</button></td>
-            <td><button v-on:click=operatingBook type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#isOperating">归还</button></td>
+            <td>{{product.returnDate}}</td>
         </tr>
     </table>
 
@@ -167,27 +143,11 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<!--是否操作-->
-<div id="isOperating" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 style="color:#e00;" class="modal-title">警告</h4>
-            </div>
-            <div class="modal-body">
-                <p>是否{{operating}}?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button v-on:click="willOperating" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 </body>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="js/bootstrap.js" ></script>
@@ -197,7 +157,7 @@
     Vue.prototype.$axios = axios;
 
     window.onload=function(){
-        selectLog.select("sys/selectBothUserBook");
+        selectLog.select("user/selectBRLog");
     };
 
     new Vue({
@@ -205,50 +165,23 @@
         data:{
 
         }
+
+
     });
     var pagehead=new Vue({
         el:'#title',
 
         methods:{
-            jumpTo:function(temp){
-                switch (temp){
-                    case "allBooks":
-                        window.location.href="adminBothBooks";
-                        break;
-                    case "bookAdd":
-                        window.location.href="adminBookAdd";
-                        break;
-                    case "allUsers":
-                        window.location.href="adminBothUsers";
-                        break;
-                    case "userAdd":
-                        window.location.href="adminUserAdd";
-                        break;
-                    case "borrowBook":
-                        window.location.href="adminBorrow";
-                        break;
-                    case "returnBook":
-                        window.location.href="adminReturn";
-                        break;
-                    case "redecorateBook":
-                        window.location.href="adminredecorateBook";
-                        break;
-                    case "bothlog":
-                        window.location.href="adminBRLog";
-                        break;
-                    case "updatePwd":
-                        window.location.href="adminupdatePwd";
-                        break;
-                    case "exit":
-                        axios.post('exit').then(function(reponse){
-                            window.location.href="admin";
-                        }).catch(function(error){
-                            //console.log(error);
-                        });
-                        break;
-                }
-            }
+            exit:function(){
+                axios.post("exit").then(function(reponse){
+                    window.location.href="user";
+                }).catch(function(error){
+                    //console.log(error);
+                });
+            },
+
         }
+
     });
 
     var selectLog =new Vue({
@@ -258,11 +191,7 @@
             input:'',
         },
         methods:{
-            operatingBook:function(event){
-                isOperating.operating=event.target.textContent;
-                isOperating.uno=event.target.parentNode.parentNode.childNodes[2].firstChild.textContent;
-                isOperating.classifyNo=event.target.parentNode.parentNode.childNodes[4].firstChild.textContent;
-            },
+
             selectUser:function(event){
                 user.selectUser(event.target.text);
             },
@@ -272,7 +201,7 @@
 
             checkInput:function(){
                 if(this.input==='')
-                    selectLog.select("sys/selectBothUserBook");
+                    selectLog.select("sys/selectBothBooks");
                 else
                     this.select("sys/selectUserBook/"+this.input);
             },
@@ -294,7 +223,7 @@
         },
         methods:{
             selectUser:function(input){
-                url="sys/selectUser/"+input;
+                url="user/selectUser";
                 this.selectUserNow(url);
             },
             selectUserNow:function(url){
@@ -306,8 +235,8 @@
                         return;
                     }
                     vm.product=response.data.data[0];
-                    console.info(this.product);
-                    console.info(response.data.msg);
+                    /*console.info(this.product);
+                    console.info(response.data.msg);*/
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -322,16 +251,16 @@
         },
         methods:{
             selectBook:function(input){
-                url="sys/selectBookByClassifyNo/"+input;
+                url="user/selectBookByClassifyNo/"+input;
                 this.selectBookNow(url);
             },
             selectBookNow:function(url){
                 var vm=this;
                 axios.get(url).then(function(response){
                     console.info(response.data.data);
-                    if(response.data.data.length==0){
-                        alert("信息已被删除");
-                        return;
+                    if(response.data.msg!="success"){
+                        alert(response.data.msg);
+                        vm.product="";
                     }
                     vm.product=response.data.data[0];
 
@@ -341,38 +270,6 @@
             }
         }
 
-    });
-
-    var isOperating=new Vue({
-        el:"#isOperating",
-        data:{
-            operating:'',
-            uno:'',
-            classifyNo:'',
-        },
-        methods:{
-
-            willOperating:function(){
-                console.info(this.operating);
-                console.info(this.uno);
-                console.info(this.classifyNo);
-                var params = new URLSearchParams();
-                params.append('uno', this.uno);
-                params.append('classifyNo',this.classifyNo);
-                if("续借"==this.operating)
-                    this.OperatingNow("sys/redecorateBook",params);
-                else if(this.operating==="归还")
-                    this.OperatingNow("sys/returnBook",params);
-            },
-            OperatingNow:function(url,params){
-                this.$axios.post(url,params).then(function(response){
-                    selectLog.select("sys/selectBothUserBook");
-                    alert(response.data.msg);
-                }).catch(function(error){
-                    console.log(error);
-                });
-            }
-        },
     });
 </script>
 </html>

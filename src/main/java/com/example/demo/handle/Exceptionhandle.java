@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 @ControllerAdvice
 public class Exceptionhandle {
-    private static org.slf4j.Logger logger= LoggerFactory.getLogger(SysService.class);
+   private static org.slf4j.Logger logger= LoggerFactory.getLogger(SysService.class);
     @ExceptionHandler(value=Exception.class)
     @ResponseBody
     public ResultEntity handle(Exception e){

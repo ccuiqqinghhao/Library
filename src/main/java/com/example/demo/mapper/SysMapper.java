@@ -16,10 +16,16 @@ public interface SysMapper {
      * @param sys
      * @return
      */
-
     @Select("select * from sys where Sno=#{sno} and Spwd=#{spwd}")
     Sys login(Sys sys);
 
+    /**
+     * 更新管理员密码
+     * @param sys
+     * @return
+     */
+    @Update("update sys set Spwd=#{spwd} where Sno=#{sno}")
+    Integer updateSyspwd(Sys sys);
     /**
      * 管理员查询所有用户
      * @return
@@ -112,7 +118,7 @@ public interface SysMapper {
      * @param book
      * @return
      */
-    @Update("update book set BtotalNum=BtotalNum+1 where ClassifyNo=#{classifyNo}")
+    @Update("update book set BtotalNum=BtotalNum+#{btotalNum} where ClassifyNo=#{classifyNo}")
     Integer updateBookTotalNum(Book book);
 
     /**

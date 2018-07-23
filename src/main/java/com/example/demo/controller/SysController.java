@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Book;
 import com.example.demo.entity.ResultEntity;
+import com.example.demo.entity.Sys;
 import com.example.demo.entity.User;
 import com.example.demo.service.SysService;
 
@@ -10,6 +11,7 @@ import com.example.demo.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -18,6 +20,20 @@ public class SysController {
     @Autowired
     SysService sysService;
 
+    /**
+     * 修改密码
+     * @param bpwd
+     * @param npwd
+     * @param httpSession
+     * @return
+     */
+    @PostMapping(value="/UpdatePwd")
+    public ResultEntity updatePwd(@RequestParam String bpwd,
+                                  @RequestParam String npwd, HttpSession httpSession){
+        Sys sys=new Sys();
+        sys.setSpwd(bpwd);
+        return sysService.updateSyspwd(sys,npwd,httpSession);
+    }
     /**
      * 查询所有用户
      * @return

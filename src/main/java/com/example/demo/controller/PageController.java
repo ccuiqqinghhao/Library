@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
@@ -45,8 +46,38 @@ public class PageController {
     public String adminReturn(){
         return "adminReturn";
     }
-    @RequestMapping("/redecorateBook")
+    @RequestMapping("/adminredecorateBook")
     public String redecorateBook(){
         return "adminRedecorateBook";
     }
+    @RequestMapping("/adminupdatePwd")
+    public String updatePwd(){
+        return "adminUpdatePwd";
+    }
+
+    @RequestMapping("/user")
+    public String user(){
+        return "user";
+    }
+    @RequestMapping("/userBothBooks")
+    public String userBothBooks(){
+        return "userBothBooks";
+    }
+    @RequestMapping("/userBR")
+    public String userBR(){
+        return "userBR";
+    }
+    @RequestMapping("/userInfo")
+    public String userInfo(){
+        return "userInfo";
+    }
+    @RequestMapping("/userBothBRLog")
+    public String userBothBRLog(){
+        return "userBothBRLog";
+    }
+    @RequestMapping("/userUpdatePwd")
+    public String userUpdatePwd(){
+        return "userUpdatePwd";
+    }
+
 }

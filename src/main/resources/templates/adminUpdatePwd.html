@@ -1,10 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html >
 <head>
     <meta charset="UTF-8">
-    <title>增加用户</title>
-
+    <title>修改密码</title>
+    <!--<link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js" rel="stylesheet" type="text/css"/>
+    -->
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <link href="css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -21,18 +24,10 @@
             /*text-decoration: none;*/
             color:#777;
         }
-        .demo-input{
-            padding-left: 10px;
-            height: 38px;
-            min-width: 262px;
-            line-height: 38px;
-            border: 1px solid #e6e6e6;
-            background-color: #fff;
-            border-radius: 2px;
-        }
     </style>
 </head>
 <body>
+
 <nav style="z-index: 999;width: 100%;background-color: #fff" class="navbar navbar-default" role="navigation" >
     <div class="container-fluid">
         <div class="navbar-header" style="margin-left: 8%;margin-right: 1%">
@@ -92,67 +87,45 @@
     </div>
 </nav>
 
-<div id="bookInfo" style="position: relative;width: 80%;margin-left: 10%">
+
+
+<div id="updateInfo" style="position: relative;width: 80%;margin-left: 10%">
     <div class="form-group">
-        <label>读者编号</label>
-        <input type="text" class="form-control" placeholder="请输入读者编号" v-model="Uno">
+        <label>请输入原密码</label>
+        <input type="password" class="form-control" placeholder="请输入原密码" v-model="Beforepwd">
     </div>
     <div class="form-group">
-        <label>姓名</label>
-        <input type="text" class="form-control" placeholder="请输入姓名" v-model="Uname">
+        <label>请输入新密码</label>
+        <input type="password" class="form-control" placeholder="请输入新密码" v-model="Newpwd1">
     </div>
     <div class="form-group">
-        <label>性别</label>
-        <!--<input type="text" class="form-control" placeholder="请输入性别" v-model="Usex">-->
-        <select class="form-control input-sm" v-model="Usex">
-            <option value ="男">男</option>
-            <option value ="女">女</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>生日</label>
-        <input class="form-control" placeholder="请选择日期" id="test1" v-model="Ubirth">
-    </div>
-    <div class="form-group">
-        <label>电话</label>
-        <input type="text" class="form-control" placeholder="请输入电话" v-model="Uphone">
-    </div>
-    <div class="form-group">
-        <label>职位</label>
-        <input type="text" class="form-control" placeholder="请输入职位" v-model="UPosition">
+        <label>请再次输入新密码</label>
+        <input type="password" class="form-control" placeholder="请再次输入新密码" v-model="Newpwd2">
     </div>
 
-    <button v-on:click="checkAdd" type="button" class="btn btn-Default form-control">添加</button>
-    <small  class="adminLogin_middle-form-text-error">{{error}}</small>
+    <button v-on:click="checkUpdate" type="button" class="btn btn-primary form-control">修改</button>
+    <small>{{error}}</small>
 </div>
 </body>
-<!-- <script type="text/javascript" src="js/vue.js"></script> -->
+<script type="text/javascript" src="js/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-<script type="text/javascript" src="http://apps.bdimg.com/libs/vue/1.0.14/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="js/bootstrap.js" ></script>
 <script src="js/backgroundstyle.js" ></script>
-<script src="js/laydate.js" ></script>
-<script>
-    lay('#version').html('-v'+ laydate.v);
-
-    //执行一个laydate实例
-    laydate.render({
-        elem: '#test1' //指定元素
-    });
-</script>
 <script type="text/javascript">
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     Vue.prototype.$axios = axios;
-
-    new Vue({
+    window.onload=function(){
+        sys.sno="${session.sno}";
+    }
+    var sys=new Vue({
         el:'#sys',
         data:{
-
+            sno:"",
         }
     });
-    var pagehead=new Vue({
+    new Vue({
         el:'#title',
 
         methods:{
@@ -192,81 +165,63 @@
                             //console.log(error);
                         });
                         break;
+
                 }
             }
         }
     });
-    new Vue({
-        el:'#bookInfo',
+
+    var updateInfo=new Vue({
+        "el":"#updateInfo",
         data:{
-
-            Uno:'',
-            Uname:'',
-            Usex:'男',
-            Ubirth:'',
-            Uphone:'',
-            UPosition:'',
-
+            Beforepwd:'',
+            Newpwd1:'',
+            Newpwd2:'',
             error:'不能为空',
         },
         watch:{
-            Uno:function(){
+            Beforepwd:function(){
                 this.checkIsNull();
             },
-            Uname:function(){
+            Newpwd1:function () {
                 this.checkIsNull();
             },
-            Usex:function(){
-                this.checkIsNull();
-            },
-            Ubirth:function(){
-                this.checkIsNull();
-            },
-            Uphone:function(){
-                this.checkIsNull();
-            },
-            UPosition:function(){
+            Newpwd2:function () {
                 this.checkIsNull();
             },
         },
         methods:{
             checkIsNull:_.debounce(
                 function(){
-                    if(this.Uno==''||
-                        this.Uname==''||
-                        this.Usex==''||
-                        this.Ubirth==''||
-                        this.Uphone==''||
-                        this.UPosition==''){
-
-                        this.error='不能为空';
-                        return
+                    if(updateInfo.Beforepwd==''||updateInfo.Newpwd1==''||updateInfo.Newpwd2=='') {
+                        updateInfo.error = '不能为空';
                     }
-                    this.error='';
+                    if(updateInfo.Newpwd1!=updateInfo.Newpwd2)
+                        updateInfo.error = '两次新密码输入不一致,请重新输入';
+                    else
+                        updateInfo.error='';
                 },100
             ),
-            checkAdd:function(){
-                if(this.error=='')
-                    this.add();
+            checkUpdate:function(){
+                if(updateInfo.error==''&&updateInfo.Newpwd1!=''&&updateInfo.Newpwd2!=''){
+                    updateInfo.update();
+                }
             },
-            add:function(){
-                var vm=this;
+            update:function(){
                 var params = new URLSearchParams();
-                params.append('uno', vm.Uno);
-                params.append('uname', vm.Uname);
-                params.append('usex', vm.Usex);
-                params.append('ubirth', vm.Ubirth);
-                params.append('uphone', vm.Uphone);
-                params.append('uposition', vm.UPosition);
-
-                axios.post('sys/insertUser',params).then(function(reponse){
-                    alert(reponse.data.msg);
+                params.append('bpwd', this.Beforepwd);
+                params.append('npwd', this.Newpwd2);
+                axios.post('sys/UpdatePwd',params).then(function(response){
+                    alert(response.data.msg);
+                    if(response.data.msg=="success") {
+                        window.location.href="admin";
+                    }
                 }).catch(function(error){
-                    //console.log(error);
+                    console.log(error);
                 });
             }
-
         }
+
     });
 </script>
 </html>
